@@ -35,13 +35,9 @@ class MinecraftBot {
       // Solo ejecutar comandos de inicio UNA sola vez
       if (!this.hasInitialized) {
         this.hasInitialized = true;
-        console.log('✅ Bot inicializado');
+        console.log('✅ Bot inicializado correctamente');
         
-        // Enviar todos los comandos juntos rápidamente
-        this.bot.chat('✅ Bot encendido');
-        this.bot.chat('/tp 0 70 0');
-        this.bot.chat('/gamemode spectator');
-        
+        // No enviar comandos - solo iniciar movimiento para evitar EPIPE
         if (!this.movementInterval) {
           this.startRandomMovement();
         }
