@@ -9,12 +9,14 @@ class MinecraftBot {
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 10;
     this.baseReconnectDelay = 10000;
+    this.hasInitialized = false;
   }
 
   create() {
     console.log('🤖 Creando bot de Minecraft...');
     
     this.bot = mineflayer.createBot(this.config);
+    this.hasInitialized = false;
 
     this.bot.on('login', () => {
       console.log('✅ Bot conectado al servidor!');
@@ -30,32 +32,37 @@ class MinecraftBot {
         console.log(`📍 Posición: ${this.bot.entity.position}`);
       }
       
-      setTimeout(() => {
-        try {
-          this.bot.chat('✅ Bot encendido correctamente!');
-          console.log('💬 Mensaje de inicio enviado al chat');
-        } catch (err) {
-          console.log('⚠️  No se pudo enviar mensaje de inicio');
-        }
-      }, 1000);
-      
-      setTimeout(() => {
-        try {
-          this.bot.chat('/tp 0 70 0');
-          console.log('📍 Teletransportando a coordenadas 0 70 0...');
-        } catch (err) {
-          console.log('⚠️  No se pudo teletransportar');
-        }
-      }, 2000);
-      
-      setTimeout(() => {
-        try {
-          this.bot.chat('/gamemode spectator');
-          console.log('👻 Intentando cambiar a modo espectador...');
-        } catch (err) {
-          console.log('⚠️  No se pudo cambiar a espectador automáticamente');
-        }
-      }, 3000);
+      // Solo ejecutar comandos de inicio UNA sola vez
+      if (!this.hasInitialized) {
+        this.hasInitialized = true;
+        
+        setTimeout(() => {
+          try {
+            this.bot.chat('✅ Bot encendido correctamente!');
+            console.log('💬 Mensaje de inicio enviado al chat');
+          } catch (err) {
+            console.log('⚠️  No se pudo enviar mensaje de inicio');
+          }
+        }, 1000);
+        
+        setTimeout(() => {
+          try {
+            this.bot.chat('/tp 0 70 0');
+            console.log('📍 Teletransportando a coordenadas 0 70 0...');
+          } catch (err) {
+            console.log('⚠️  No se pudo teletransportar');
+          }
+        }, 2000);
+        
+        setTimeout(() => {
+          try {
+            this.bot.chat('/gamemode spectator');
+            console.log('👻 Intentando cambiar a modo espectador...');
+          } catch (err) {
+            console.log('⚠️  No se pudo cambiar a espectador automáticamente');
+          }
+        }, 3000);
+      }
       
       this.startRandomMovement();
     });
