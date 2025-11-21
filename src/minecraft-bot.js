@@ -37,10 +37,31 @@ class MinecraftBot {
         this.hasInitialized = true;
         console.log('✅ Bot inicializado correctamente');
         
-        // No enviar comandos - solo iniciar movimiento para evitar EPIPE
-        if (!this.movementInterval) {
-          this.startRandomMovement();
-        }
+        // Esperar a que el bot esté completamente listo
+        setTimeout(() => {
+          try {
+            // Enviar comandos con mayor separación
+            this.bot.chat('/tp 0 70 0');
+            console.log('📍 Comando teletransporte enviado');
+          } catch (err) {
+            console.log('⚠️  No se pudo enviar teletransporte:', err.message);
+          }
+          
+          // Esperar más antes de espectador
+          setTimeout(() => {
+            try {
+              this.bot.chat('/gamemode spectator');
+              console.log('👻 Comando espectador enviado');
+            } catch (err) {
+              console.log('⚠️  No se pudo enviar espectador:', err.message);
+            }
+            
+            // Iniciar movimiento después
+            if (!this.movementInterval) {
+              this.startRandomMovement();
+            }
+          }, 3000);
+        }, 2000);
       }
     });
 
