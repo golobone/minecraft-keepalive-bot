@@ -111,7 +111,7 @@ function stopRandomMovement() {
     clearInterval(movementInterval);
     movementInterval = null;
   }
-  if (bot) {
+  if (bot && bot.clearControlStates) {
     bot.clearControlStates();
   }
 }
