@@ -15,10 +15,13 @@ async function initialize() {
   console.log('🚀 Inicializando Minecraft Keepalive Bot con Aternos...');
   console.log('');
 
-  discordNotifier = new DiscordNotifier(process.env.DISCORD_WEBHOOK_URL);
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL || config.discord.webhookUrl;
+  console.log('🔍 URL del webhook:', webhookUrl ? '✅ Detectado' : '❌ No encontrado');
+  
+  discordNotifier = new DiscordNotifier(webhookUrl);
 
   if (discordNotifier.isEnabled) {
-    console.log('📡 Monitoreo con Discord habilitado');
+    console.log('📡 Monitoreo con Discord habilitado ✅');
   } else {
     console.log('⚠️  Discord Webhook no configurado - solo modo local');
   }
