@@ -35,43 +35,16 @@ class MinecraftBot {
       // Solo ejecutar comandos de inicio UNA sola vez
       if (!this.hasInitialized) {
         this.hasInitialized = true;
+        console.log('✅ Bot inicializado');
         
-        // Mensaje de inicio
-        setTimeout(() => {
-          try {
-            this.bot.chat('✅ Bot encendido correctamente!');
-            console.log('💬 Mensaje de inicio enviado al chat');
-          } catch (err) {
-            console.log('⚠️  No se pudo enviar mensaje de inicio');
-          }
-        }, 3000);
+        // Enviar todos los comandos juntos rápidamente
+        this.bot.chat('✅ Bot encendido');
+        this.bot.chat('/tp 0 70 0');
+        this.bot.chat('/gamemode spectator');
         
-        // Teletransporte a 0 70 0
-        setTimeout(() => {
-          try {
-            this.bot.chat('/tp 0 70 0');
-            console.log('📍 Teletransportando a coordenadas 0 70 0...');
-          } catch (err) {
-            console.log('⚠️  No se pudo teletransportar');
-          }
-        }, 10000);
-        
-        // Cambio a espectador
-        setTimeout(() => {
-          try {
-            this.bot.chat('/gamemode spectator');
-            console.log('👻 Intentando cambiar a modo espectador...');
-          } catch (err) {
-            console.log('⚠️  No se pudo cambiar a espectador automáticamente');
-          }
-        }, 17000);
-        
-        // Iniciar movimiento después de los comandos
-        setTimeout(() => {
-          if (!this.movementInterval) {
-            this.startRandomMovement();
-          }
-        }, 25000);
+        if (!this.movementInterval) {
+          this.startRandomMovement();
+        }
       }
     });
 
