@@ -2,17 +2,13 @@ require('dotenv').config();
 
 const MinecraftBot = require('./src/minecraft-bot');
 const DiscordNotifier = require('./src/discord-notifier');
-const AternosClient = require('./src/aternos-client');
-const ServerMonitor = require('./src/server-monitor');
 const config = require('./src/config');
 
 let bot = null;
 let discordNotifier = null;
-let aternosClient = null;
-let serverMonitor = null;
 
 async function initialize() {
-  console.log('🚀 Inicializando Minecraft Keepalive Bot con Aternos...');
+  console.log('🚀 Inicializando Minecraft Keepalive Bot...');
   console.log('');
 
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL || config.discord.webhookUrl;
@@ -24,32 +20,6 @@ async function initialize() {
     console.log('📡 Monitoreo con Discord habilitado ✅');
   } else {
     console.log('⚠️  Discord Webhook no configurado - solo modo local');
-  }
-
-  aternosClient = new AternosClient();
-  aternosClient.loadSession();
-
-  if (process.env.ATERNOS_USERNAME && process.env.ATERNOS_PASSWORD) {
-    const authenticated = await aternosClient.authenticate(
-      process.env.ATERNOS_USERNAME,
-      process.env.ATERNOS_PASSWORD
-    );
-
-    if (authenticated) {
-      serverMonitor = new ServerMonitor(
-        aternosClient,
-        discordNotifier,
-        config.monitoring.checkIntervalMs
-      );
-      const serverStarted = await serverMonitor.startServerIfOffline();
-      serverMonitor.start();
-      console.log(`${serverStarted ? '✅' : '⚠️'} Monitoreo del servidor de Aternos activo`);
-    } else {
-      console.log('⚠️  Falló autenticación con Aternos - monitoreo deshabilitado');
-    }
-  } else {
-    console.log('⚠️  Credenciales de Aternos no configuradas - monitoreo deshabilitado');
-    console.log('💡 Configura ATERNOS_USERNAME y ATERNOS_PASSWORD para activar');
   }
 
   bot = new MinecraftBot(config.minecraft, discordNotifier);

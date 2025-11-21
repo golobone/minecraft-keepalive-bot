@@ -1,38 +1,26 @@
-# Bot de Minecraft Keepalive + Aternos + Discord
+# Bot de Minecraft Keepalive + Discord
 
 ## Descripción
-Bot de Minecraft que se conecta automáticamente a un servidor de Aternos, lo mantiene activo moviéndose aleatoriamente, y envía notificaciones de estado por Discord.
+Bot de Minecraft que se conecta a un servidor, lo mantiene activo moviéndose aleatoriamente, y envía notificaciones de estado por Discord.
 
 ## Características principales
 
 ### 🤖 Bot de Minecraft
-- ✅ Conexión automática al servidor
+- ✅ Conexión al servidor (offline mode)
 - ✅ Mensaje de inicio en el chat
 - ✅ Teletransporte a coordenadas 0, 70, 0
 - ✅ Cambio a modo espectador
-- ✅ Movimiento aleatorio continuo (WASD + rotación de cámara)
-- ✅ Reconexión automática con backoff exponencial
-- ✅ Mensaje de despedida al apagar
-
-### 🚀 Aternos Integration
-- ✅ Detección automática de servidor offline
-- ✅ Inicio automático del servidor vía API
-- ✅ Autenticación segura con sesión persistente
-- ✅ Obtención de información del servidor (IP, puerto, jugadores)
+- ✅ Movimiento aleatorio continuo (rotación de cámara)
+- ✅ Entra UNA SOLA VEZ y se mantiene en el servidor
 
 ### 📢 Notificaciones Discord
-- ✅ Servidor iniciando
-- ✅ Servidor online (con info: IP, puerto, jugadores)
-- ✅ Servidor offline
 - ✅ Bot conectado/desconectado
 - ✅ Intentos de reconexión
 - ✅ Errores y problemas críticos
 
 ### 📊 Monitoreo
-- ✅ Chequeos periódicos del estado del servidor
-- ✅ Seguimiento de uptime del bot
-- ✅ Información en tiempo real
-- ✅ Intentos de reconexión inteligentes
+- ✅ Seguimiento de estado del bot en Discord
+- ✅ Información de conexión
 
 ## Configuración
 
