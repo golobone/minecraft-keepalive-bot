@@ -73,7 +73,8 @@ class MinecraftBot {
       if (this.discordNotifier) {
         this.discordNotifier.notifyBotDisconnected(`Expulsado: ${reason}`);
       }
-      this.reconnect();
+      // No reconectar automáticamente si fue expulsado
+      // El bot se mantiene desconectado hasta que el usuario lo reinicie
     });
 
     this.bot.on('end', (reason) => {
@@ -82,7 +83,7 @@ class MinecraftBot {
         console.log('📤 Razón:', reason);
       }
       this.stopRandomMovement();
-      this.reconnect();
+      // No reconectar automáticamente - el bot se mantiene en el servidor
     });
 
     this.bot.on('error', (err) => {
