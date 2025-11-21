@@ -43,7 +43,7 @@ class MinecraftBot {
           } catch (err) {
             console.log('⚠️  No se pudo enviar mensaje de inicio');
           }
-        }, 1000);
+        }, 2000);
         
         setTimeout(() => {
           try {
@@ -52,7 +52,7 @@ class MinecraftBot {
           } catch (err) {
             console.log('⚠️  No se pudo teletransportar');
           }
-        }, 2000);
+        }, 5000);
         
         setTimeout(() => {
           try {
@@ -61,10 +61,15 @@ class MinecraftBot {
           } catch (err) {
             console.log('⚠️  No se pudo cambiar a espectador automáticamente');
           }
-        }, 3000);
+        }, 8000);
       }
       
-      this.startRandomMovement();
+      // Iniciar movimiento solo después de 10 segundos para evitar conflictos
+      if (!this.movementInterval) {
+        setTimeout(() => {
+          this.startRandomMovement();
+        }, 10000);
+      }
     });
 
     this.bot.on('kicked', (reason) => {
@@ -117,31 +122,50 @@ class MinecraftBot {
   }
 
   startRandomMovement() {
+    if (this.movementInterval) {
+      console.log('🎮 Movimiento aleatorio ya está activo');
+      return;
+    }
+    
     console.log('🎮 Iniciando movimiento aleatorio...');
     
     this.movementInterval = setInterval(() => {
       if (!this.bot || !this.bot.entity) return;
 
-      const actions = ['forward', 'back', 'left', 'right', 'jump'];
-      const randomAction = actions[Math.floor(Math.random() * actions.length)];
-      
-      this.bot.clearControlStates();
-      this.bot.setControlState(randomAction, true);
-      
-      setTimeout(() => {
-        if (this.bot) {
-          this.bot.clearControlStates();
-        }
-      }, 500 + Math.random() * 1500);
-
+      // Rotación aleatoria más frecuente que movimiento
       const yaw = Math.random() * Math.PI * 2;
       const pitch = (Math.random() - 0.5) * Math.PI * 0.5;
       
-      if (this.bot) {
+      try {
         this.bot.look(yaw, pitch);
+      } catch (err) {
+        // Ignorar errores de rotación
       }
 
-    }, 2000 + Math.random() * 3000);
+      // Movimiento menos frecuente
+      if (Math.random() > 0.5) {
+        const actions = ['forward', 'back', 'left', 'right'];
+        const randomAction = actions[Math.floor(Math.random() * actions.length)];
+        
+        try {
+          this.bot.clearControlStates();
+          this.bot.setControlState(randomAction, true);
+          
+          setTimeout(() => {
+            try {
+              if (this.bot) {
+                this.bot.clearControlStates();
+              }
+            } catch (err) {
+              // Ignorar errores
+            }
+          }, 1000 + Math.random() * 2000);
+        } catch (err) {
+          // Ignorar errores de movimiento
+        }
+      }
+
+    }, 3000 + Math.random() * 2000);
   }
 
   stopRandomMovement() {
