@@ -3,7 +3,7 @@ const mineflayer = require('mineflayer');
 const config = {
   host: 'Aleatrio.aternos.me',
   port: 16024,
-  username: 'KeepaliveBot',
+  username: 'BOTnooff',
   version: false,
   auth: 'offline'
 };
@@ -41,8 +41,11 @@ function createBot() {
     reconnect();
   });
 
-  bot.on('end', () => {
+  bot.on('end', (reason) => {
     console.log('🔌 Conexión terminada');
+    if (reason && reason !== 'disconnect.quitting') {
+      console.log('📤 Razón:', reason);
+    }
     stopRandomMovement();
     reconnect();
   });
@@ -120,11 +123,30 @@ console.log('');
 
 createBot();
 
+let isShuttingDown = false;
+
 process.on('SIGINT', () => {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+  
   console.log('\n👋 Cerrando bot...');
   stopRandomMovement();
-  if (bot) {
-    bot.quit();
+  
+  if (bot && bot.entity) {
+    try {
+      bot.chat('¡Bot desconectándose! Nos vemos pronto.');
+      console.log('📤 Mensaje de despedida enviado al chat');
+      
+      setTimeout(() => {
+        bot.quit();
+        process.exit(0);
+      }, 1000);
+    } catch (err) {
+      console.log('⚠️  No se pudo enviar mensaje de despedida');
+      bot.quit();
+      process.exit(0);
+    }
+  } else {
+    process.exit(0);
   }
-  process.exit(0);
 });

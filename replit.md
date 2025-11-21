@@ -13,6 +13,7 @@ Bot de Minecraft que se conecta automáticamente a un servidor, entra en modo es
 - ✅ Cambio a modo espectador
 - ✅ Movimiento aleatorio continuo (WASD + rotación de cámara)
 - ✅ Reconexión automática si se desconecta
+- ✅ Mensaje de despedida en el chat cuando se apaga el bot
 - ✅ Logs detallados de eventos
 
 ## Estructura del Proyecto
