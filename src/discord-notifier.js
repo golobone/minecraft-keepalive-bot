@@ -3,9 +3,15 @@ const axios = require('axios');
 class DiscordNotifier {
   constructor(webhookUrl) {
     this.webhookUrl = webhookUrl;
-    this.isEnabled = !!webhookUrl && webhookUrl.startsWith('https://');
-    if (webhookUrl && !this.isEnabled) {
-      console.log('⚠️  Discord Webhook URL inválido (no comienza con https://)');
+    const isValid = webhookUrl && typeof webhookUrl === 'string' && webhookUrl.startsWith('https://');
+    this.isEnabled = !!isValid;
+    
+    if (webhookUrl && !isValid) {
+      console.log('⚠️  Discord Webhook URL inválido. Recibido:', typeof webhookUrl, webhookUrl ? '(no vacío)' : '(vacío)');
+    }
+    
+    if (!webhookUrl) {
+      console.log('⚠️  Discord Webhook URL no configurado');
     }
   }
 
