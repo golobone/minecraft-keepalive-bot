@@ -32,12 +32,30 @@ function createBot() {
     
     setTimeout(() => {
       try {
+        bot.chat('✅ Bot encendido correctamente!');
+        console.log('💬 Mensaje de inicio enviado al chat');
+      } catch (err) {
+        console.log('⚠️  No se pudo enviar mensaje de inicio');
+      }
+    }, 1000);
+    
+    setTimeout(() => {
+      try {
+        bot.chat('/tp 0 70 0');
+        console.log('📍 Teletransportando a coordenadas 0 70 0...');
+      } catch (err) {
+        console.log('⚠️  No se pudo teletransportar');
+      }
+    }, 2000);
+    
+    setTimeout(() => {
+      try {
         bot.chat('/gamemode spectator');
         console.log('👻 Intentando cambiar a modo espectador...');
       } catch (err) {
         console.log('⚠️  No se pudo cambiar a espectador automáticamente');
       }
-    }, 2000);
+    }, 3000);
     
     startRandomMovement();
   });
@@ -58,14 +76,21 @@ function createBot() {
   });
 
   bot.on('error', (err) => {
+    if (err.message.includes('unknown chat format code')) {
+      return;
+    }
     console.log('⚠️  Error:', err.message);
     stopRandomMovement();
   });
 
   bot.on('message', (message) => {
-    const msg = message.toString();
-    if (msg.includes('gamemode') || msg.includes('espectador') || msg.includes('spectator')) {
-      console.log('📨 Mensaje del servidor:', msg);
+    try {
+      const msg = message.toString();
+      if (msg.includes('gamemode') || msg.includes('espectador') || msg.includes('spectator')) {
+        console.log('📨 Mensaje del servidor:', msg);
+      }
+    } catch (err) {
+      // Ignorar errores de formato de mensaje
     }
   });
 
@@ -150,6 +175,14 @@ console.log(`👤 Usuario: ${config.username}`);
 console.log('');
 
 createBot();
+
+process.on('uncaughtException', (err) => {
+  if (err.message && err.message.includes('unknown chat format code')) {
+    console.log('⚠️  Mensaje del servidor en formato desconocido (ignorado)');
+    return;
+  }
+  console.error('💥 Error no capturado:', err);
+});
 
 let isShuttingDown = false;
 

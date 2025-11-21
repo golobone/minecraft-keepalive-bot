@@ -10,10 +10,13 @@ Bot de Minecraft que se conecta automáticamente a un servidor, entra en modo es
 
 ## Características
 - ✅ Conexión automática al servidor
+- ✅ Mensaje de inicio en el chat cuando se enciende el bot
+- ✅ Teletransporte automático a coordenadas 0, 70, 0
 - ✅ Cambio a modo espectador
 - ✅ Movimiento aleatorio continuo (WASD + rotación de cámara)
-- ✅ Reconexión automática si se desconecta
+- ✅ Reconexión automática con backoff exponencial
 - ✅ Mensaje de despedida en el chat cuando se apaga el bot
+- ✅ Manejo robusto de errores del servidor
 - ✅ Logs detallados de eventos
 
 ## Estructura del Proyecto
