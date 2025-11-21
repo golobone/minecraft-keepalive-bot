@@ -1,180 +1,54 @@
-const mineflayer = require('mineflayer');
+require('dotenv').config();
 
-const config = {
-  host: 'Aleatrio.aternos.me',
-  port: 16024,
-  username: 'EternalAFK',
-  version: false,
-  auth: 'offline'
-};
+const MinecraftBot = require('./src/minecraft-bot');
+const DiscordNotifier = require('./src/discord-notifier');
+const AternosClient = require('./src/aternos-client');
+const ServerMonitor = require('./src/server-monitor');
+const config = require('./src/config');
 
-let bot;
-let movementInterval;
-let reconnectAttempts = 0;
-let maxReconnectAttempts = 10;
-let baseReconnectDelay = 10000;
+let bot = null;
+let discordNotifier = null;
+let aternosClient = null;
+let serverMonitor = null;
 
-function createBot() {
-  console.log('🤖 Creando bot...');
-  
-  bot = mineflayer.createBot(config);
+async function initialize() {
+  console.log('🚀 Inicializando Minecraft Keepalive Bot con Aternos...');
+  console.log('');
 
-  bot.on('login', () => {
-    console.log('✅ Bot conectado al servidor!');
-    reconnectAttempts = 0;
-  });
+  discordNotifier = new DiscordNotifier(process.env.DISCORD_WEBHOOK_URL);
 
-  bot.on('spawn', () => {
-    console.log('🌍 Bot apareció en el mundo');
-    if (bot.entity && bot.entity.position) {
-      console.log(`📍 Posición: ${bot.entity.position}`);
-    }
-    
-    setTimeout(() => {
-      try {
-        bot.chat('✅ Bot encendido correctamente!');
-        console.log('💬 Mensaje de inicio enviado al chat');
-      } catch (err) {
-        console.log('⚠️  No se pudo enviar mensaje de inicio');
-      }
-    }, 1000);
-    
-    setTimeout(() => {
-      try {
-        bot.chat('/tp 0 70 0');
-        console.log('📍 Teletransportando a coordenadas 0 70 0...');
-      } catch (err) {
-        console.log('⚠️  No se pudo teletransportar');
-      }
-    }, 2000);
-    
-    setTimeout(() => {
-      try {
-        bot.chat('/gamemode spectator');
-        console.log('👻 Intentando cambiar a modo espectador...');
-      } catch (err) {
-        console.log('⚠️  No se pudo cambiar a espectador automáticamente');
-      }
-    }, 3000);
-    
-    startRandomMovement();
-  });
-
-  bot.on('kicked', (reason) => {
-    console.log('❌ Bot expulsado del servidor:', reason);
-    stopRandomMovement();
-    reconnect();
-  });
-
-  bot.on('end', (reason) => {
-    console.log('🔌 Conexión terminada');
-    if (reason && reason !== 'disconnect.quitting') {
-      console.log('📤 Razón:', reason);
-    }
-    stopRandomMovement();
-    reconnect();
-  });
-
-  bot.on('error', (err) => {
-    if (err.message.includes('unknown chat format code')) {
-      return;
-    }
-    console.log('⚠️  Error:', err.message);
-    stopRandomMovement();
-  });
-
-  bot.on('message', (message) => {
-    try {
-      const msg = message.toString();
-      if (msg.includes('gamemode') || msg.includes('espectador') || msg.includes('spectator')) {
-        console.log('📨 Mensaje del servidor:', msg);
-      }
-    } catch (err) {
-      // Ignorar errores de formato de mensaje
-    }
-  });
-
-  bot.on('health', () => {
-    if (bot.health <= 0) {
-      console.log('💀 El bot murió, respawneando...');
-      bot.chat('/spectator');
-    }
-  });
-}
-
-function startRandomMovement() {
-  console.log('🎮 Iniciando movimiento aleatorio...');
-  
-  movementInterval = setInterval(() => {
-    if (!bot || !bot.entity) return;
-
-    const actions = ['forward', 'back', 'left', 'right', 'jump'];
-    const randomAction = actions[Math.floor(Math.random() * actions.length)];
-    
-    bot.clearControlStates();
-    
-    bot.setControlState(randomAction, true);
-    
-    setTimeout(() => {
-      if (bot) {
-        bot.clearControlStates();
-      }
-    }, 500 + Math.random() * 1500);
-
-    const yaw = Math.random() * Math.PI * 2;
-    const pitch = (Math.random() - 0.5) * Math.PI * 0.5;
-    
-    if (bot) {
-      bot.look(yaw, pitch);
-    }
-
-  }, 2000 + Math.random() * 3000);
-}
-
-function stopRandomMovement() {
-  if (movementInterval) {
-    clearInterval(movementInterval);
-    movementInterval = null;
+  if (config.monitoring.monitoringEnabled) {
+    console.log('📡 Monitoreo con Discord habilitado');
+  } else {
+    console.log('⚠️  Discord Webhook no configurado - solo modo local');
   }
-  if (bot && bot.clearControlStates) {
-    bot.clearControlStates();
+
+  aternosClient = new AternosClient();
+  aternosClient.loadSession();
+
+  if (process.env.ATERNOS_USERNAME && process.env.ATERNOS_PASSWORD) {
+    const authenticated = await aternosClient.authenticate(
+      process.env.ATERNOS_USERNAME,
+      process.env.ATERNOS_PASSWORD
+    );
+
+    if (authenticated) {
+      const startedServer = await serverMonitor?.startServerIfOffline?.();
+      serverMonitor = new ServerMonitor(
+        aternosClient,
+        discordNotifier,
+        config.monitoring.checkIntervalMs
+      );
+      serverMonitor.start();
+    }
+  } else {
+    console.log('⚠️  Credenciales de Aternos no configuradas - monitoreo deshabilitado');
+    console.log('💡 Configura ATERNOS_USERNAME y ATERNOS_PASSWORD para activar');
   }
+
+  bot = new MinecraftBot(config.minecraft, discordNotifier);
+  bot.create();
 }
-
-function reconnect() {
-  reconnectAttempts++;
-  
-  if (reconnectAttempts > maxReconnectAttempts) {
-    console.log(`\n❌ Se alcanzó el máximo de ${maxReconnectAttempts} intentos de reconexión.`);
-    console.log('💡 Esto puede deberse a:');
-    console.log('   - El bot no está en la whitelist del servidor');
-    console.log('   - El servidor está caído o inaccesible');
-    console.log('   - Problemas de conexión');
-    console.log('\n🔄 Esperando 5 minutos antes de reintentar...\n');
-    
-    setTimeout(() => {
-      reconnectAttempts = 0;
-      createBot();
-    }, 300000);
-    return;
-  }
-  
-  const delay = Math.min(baseReconnectDelay * Math.pow(1.5, reconnectAttempts - 1), 60000);
-  const seconds = Math.round(delay / 1000);
-  
-  console.log(`🔄 Reconectando en ${seconds} segundos... (Intento ${reconnectAttempts}/${maxReconnectAttempts})`);
-  
-  setTimeout(() => {
-    createBot();
-  }, delay);
-}
-
-console.log('🚀 Iniciando bot de Minecraft...');
-console.log(`📡 Servidor: ${config.host}:${config.port}`);
-console.log(`👤 Usuario: ${config.username}`);
-console.log('');
-
-createBot();
 
 process.on('uncaughtException', (err) => {
   if (err.message && err.message.includes('unknown chat format code')) {
@@ -186,28 +60,29 @@ process.on('uncaughtException', (err) => {
 
 let isShuttingDown = false;
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   if (isShuttingDown) return;
   isShuttingDown = true;
   
   console.log('\n👋 Cerrando bot...');
-  stopRandomMovement();
   
-  if (bot && bot.entity) {
-    try {
-      bot.chat('¡Bot desconectándose! Nos vemos pronto.');
-      console.log('📤 Mensaje de despedida enviado al chat');
-      
-      setTimeout(() => {
-        bot.quit();
-        process.exit(0);
-      }, 1000);
-    } catch (err) {
-      console.log('⚠️  No se pudo enviar mensaje de despedida');
-      bot.quit();
-      process.exit(0);
-    }
-  } else {
-    process.exit(0);
+  if (serverMonitor) {
+    serverMonitor.stop();
   }
+
+  if (bot) {
+    await bot.sendGoodbyeMessage();
+    bot.quit();
+  }
+
+  if (discordNotifier) {
+    await discordNotifier.notifyBotDisconnected('Bot cerrado manualmente');
+  }
+
+  process.exit(0);
+});
+
+initialize().catch(err => {
+  console.error('❌ Error durante la inicialización:', err.message);
+  process.exit(1);
 });
