@@ -130,42 +130,19 @@ class MinecraftBot {
     console.log('🎮 Iniciando movimiento aleatorio...');
     
     this.movementInterval = setInterval(() => {
-      if (!this.bot || !this.bot.entity) return;
+      // Verificar que bot existe y está conectado
+      if (!this.bot || !this.bot.entity || !this.bot.player) return;
 
-      // Rotación aleatoria más frecuente que movimiento
-      const yaw = Math.random() * Math.PI * 2;
-      const pitch = (Math.random() - 0.5) * Math.PI * 0.5;
-      
       try {
+        // Solo rotación, sin movimiento - mucho más seguro
+        const yaw = Math.random() * Math.PI * 2;
+        const pitch = (Math.random() - 0.5) * Math.PI * 0.3;
         this.bot.look(yaw, pitch);
       } catch (err) {
-        // Ignorar errores de rotación
+        // Ignorar silenciosamente
       }
 
-      // Movimiento menos frecuente
-      if (Math.random() > 0.5) {
-        const actions = ['forward', 'back', 'left', 'right'];
-        const randomAction = actions[Math.floor(Math.random() * actions.length)];
-        
-        try {
-          this.bot.clearControlStates();
-          this.bot.setControlState(randomAction, true);
-          
-          setTimeout(() => {
-            try {
-              if (this.bot) {
-                this.bot.clearControlStates();
-              }
-            } catch (err) {
-              // Ignorar errores
-            }
-          }, 1000 + Math.random() * 2000);
-        } catch (err) {
-          // Ignorar errores de movimiento
-        }
-      }
-
-    }, 3000 + Math.random() * 2000);
+    }, 5000 + Math.random() * 5000);
   }
 
   stopRandomMovement() {
