@@ -71,10 +71,27 @@ class MinecraftBot {
       if (err.message.includes('unknown chat format code')) {
         return;
       }
-      console.log('⚠️  Error:', err.message);
+      
+      // Identificar tipo de error
+      let errorName = 'Error del bot';
+      if (err.code === 'EPIPE') {
+        errorName = '❌ Error EPIPE (tubería rota)';
+      } else if (err.code === 'ECONNRESET') {
+        errorName = '❌ Error ECONNRESET (conexión reiniciada)';
+      } else if (err.code === 'ENOTFOUND') {
+        errorName = '❌ Error ENOTFOUND (servidor no encontrado)';
+      } else if (err.code === 'ECONNREFUSED') {
+        errorName = '❌ Error ECONNREFUSED (conexión rechazada)';
+      } else if (err.message.includes('timeout')) {
+        errorName = '⏱️ Error de timeout';
+      } else if (err.message.includes('throttled')) {
+        errorName = '🚫 Conexión limitada por servidor';
+      }
+      
+      console.log(`⚠️  ${errorName}: ${err.message}`);
       this.stopRandomMovement();
       if (this.discordNotifier) {
-        this.discordNotifier.notifyError('Error del bot', err.message);
+        this.discordNotifier.notifyError(errorName, err.message);
       }
     });
 
