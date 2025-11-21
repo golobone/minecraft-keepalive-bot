@@ -3,7 +3,10 @@ const axios = require('axios');
 class DiscordNotifier {
   constructor(webhookUrl) {
     this.webhookUrl = webhookUrl;
-    this.isEnabled = !!webhookUrl;
+    this.isEnabled = !!webhookUrl && webhookUrl.startsWith('https://');
+    if (webhookUrl && !this.isEnabled) {
+      console.log('⚠️  Discord Webhook URL inválido (no comienza con https://)');
+    }
   }
 
   async sendNotification(title, description, color = 3447003) {
@@ -25,7 +28,8 @@ class DiscordNotifier {
       };
 
       await axios.post(this.webhookUrl, payload, {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 5000
       });
       
       console.log(`✅ Notificación enviada a Discord: ${title}`);

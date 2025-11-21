@@ -17,7 +17,7 @@ async function initialize() {
 
   discordNotifier = new DiscordNotifier(process.env.DISCORD_WEBHOOK_URL);
 
-  if (config.monitoring.monitoringEnabled) {
+  if (discordNotifier.isEnabled) {
     console.log('📡 Monitoreo con Discord habilitado');
   } else {
     console.log('⚠️  Discord Webhook no configurado - solo modo local');
@@ -33,13 +33,16 @@ async function initialize() {
     );
 
     if (authenticated) {
-      const startedServer = await serverMonitor?.startServerIfOffline?.();
       serverMonitor = new ServerMonitor(
         aternosClient,
         discordNotifier,
         config.monitoring.checkIntervalMs
       );
+      const serverStarted = await serverMonitor.startServerIfOffline();
       serverMonitor.start();
+      console.log(`${serverStarted ? '✅' : '⚠️'} Monitoreo del servidor de Aternos activo`);
+    } else {
+      console.log('⚠️  Falló autenticación con Aternos - monitoreo deshabilitado');
     }
   } else {
     console.log('⚠️  Credenciales de Aternos no configuradas - monitoreo deshabilitado');
