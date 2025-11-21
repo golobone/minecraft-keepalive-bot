@@ -1,0 +1,15 @@
+{
+  "name": "minecraft-keepalive-bot",
+  "version": "1.0.0",
+  "description": "Bot de Minecraft que mantiene el servidor activo moviéndose aleatoriamente",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "keywords": ["minecraft", "bot", "keepalive"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mineflayer": "^4.20.1"
+  }
+}
