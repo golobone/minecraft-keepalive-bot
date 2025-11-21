@@ -35,40 +35,13 @@ class MinecraftBot {
       // Solo ejecutar comandos de inicio UNA sola vez
       if (!this.hasInitialized) {
         this.hasInitialized = true;
+        console.log('✅ Bot inicializado correctamente');
         
-        setTimeout(() => {
-          try {
-            this.bot.chat('✅ Bot encendido correctamente!');
-            console.log('💬 Mensaje de inicio enviado al chat');
-          } catch (err) {
-            console.log('⚠️  No se pudo enviar mensaje de inicio');
-          }
-        }, 2000);
-        
-        setTimeout(() => {
-          try {
-            this.bot.chat('/tp 0 70 0');
-            console.log('📍 Teletransportando a coordenadas 0 70 0...');
-          } catch (err) {
-            console.log('⚠️  No se pudo teletransportar');
-          }
-        }, 5000);
-        
-        setTimeout(() => {
-          try {
-            this.bot.chat('/gamemode spectator');
-            console.log('👻 Intentando cambiar a modo espectador...');
-          } catch (err) {
-            console.log('⚠️  No se pudo cambiar a espectador automáticamente');
-          }
-        }, 8000);
-      }
-      
-      // Iniciar movimiento solo después de 10 segundos para evitar conflictos
-      if (!this.movementInterval) {
-        setTimeout(() => {
+        // IMPORTANTE: No enviar comandos de chat - el servidor es muy sensible
+        // Solo iniciar movimiento suave
+        if (!this.movementInterval) {
           this.startRandomMovement();
-        }, 10000);
+        }
       }
     });
 
