@@ -3,13 +3,16 @@ const mineflayer = require('mineflayer');
 const config = {
   host: 'Aleatrio.aternos.me',
   port: 16024,
-  username: 'BOTnooff',
+  username: 'EternalAFK',
   version: false,
   auth: 'offline'
 };
 
 let bot;
 let movementInterval;
+let reconnectAttempts = 0;
+let maxReconnectAttempts = 10;
+let baseReconnectDelay = 10000;
 
 function createBot() {
   console.log('🤖 Creando bot...');
@@ -18,7 +21,14 @@ function createBot() {
 
   bot.on('login', () => {
     console.log('✅ Bot conectado al servidor!');
-    console.log(`📍 Posición: ${bot.entity.position}`);
+    reconnectAttempts = 0;
+  });
+
+  bot.on('spawn', () => {
+    console.log('🌍 Bot apareció en el mundo');
+    if (bot.entity && bot.entity.position) {
+      console.log(`📍 Posición: ${bot.entity.position}`);
+    }
     
     setTimeout(() => {
       try {
@@ -28,10 +38,7 @@ function createBot() {
         console.log('⚠️  No se pudo cambiar a espectador automáticamente');
       }
     }, 2000);
-  });
-
-  bot.on('spawn', () => {
-    console.log('🌍 Bot apareció en el mundo');
+    
     startRandomMovement();
   });
 
@@ -110,10 +117,31 @@ function stopRandomMovement() {
 }
 
 function reconnect() {
-  console.log('🔄 Reconectando en 5 segundos...');
+  reconnectAttempts++;
+  
+  if (reconnectAttempts > maxReconnectAttempts) {
+    console.log(`\n❌ Se alcanzó el máximo de ${maxReconnectAttempts} intentos de reconexión.`);
+    console.log('💡 Esto puede deberse a:');
+    console.log('   - El bot no está en la whitelist del servidor');
+    console.log('   - El servidor está caído o inaccesible');
+    console.log('   - Problemas de conexión');
+    console.log('\n🔄 Esperando 5 minutos antes de reintentar...\n');
+    
+    setTimeout(() => {
+      reconnectAttempts = 0;
+      createBot();
+    }, 300000);
+    return;
+  }
+  
+  const delay = Math.min(baseReconnectDelay * Math.pow(1.5, reconnectAttempts - 1), 60000);
+  const seconds = Math.round(delay / 1000);
+  
+  console.log(`🔄 Reconectando en ${seconds} segundos... (Intento ${reconnectAttempts}/${maxReconnectAttempts})`);
+  
   setTimeout(() => {
     createBot();
-  }, 5000);
+  }, delay);
 }
 
 console.log('🚀 Iniciando bot de Minecraft...');
