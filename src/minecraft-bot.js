@@ -80,7 +80,7 @@ class MinecraftBot {
         console.log('📤 Razón:', reason);
       }
       this.stopRandomMovement();
-      // No reconectar automáticamente - el bot se mantiene en el servidor
+      this.reconnect();
     });
 
     this.bot.on('error', (err) => {
