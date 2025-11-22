@@ -41,9 +41,11 @@ ATERNOS_PASSWORD=tu_contraseña
 .
 ├── bot.js                    # Punto de entrada principal
 ├── launcher.js              # Panel de control (menú)
-├── installer-windows.bat    # Instalador automático
-├── uninstaller-windows.bat  # Desinstalador automático
-├── install-instructions.md  # Guía de instalación
+├── build-exe.bat            # Genera .exe ejecutable
+├── installer-windows.bat    # Instalador con Node.js
+├── installer-exe.bat        # Instalador .exe compilado
+├── uninstaller-windows.bat  # Desinstalador (Node.js)
+├── install-instructions.md  # Guía completa de instalación
 ├── package.json             # Dependencias
 ├── src/
 │   ├── config.js            # Configuración centralizada
@@ -56,18 +58,25 @@ ATERNOS_PASSWORD=tu_contraseña
 
 ## Uso
 
-### En tu PC COMO APLICACIÓN (RECOMENDADO)
+### En tu PC COMO APLICACIÓN (RECOMENDADO - .EXE)
 
-1. Instala Node.js desde https://nodejs.org/
-2. Descarga el proyecto desde Replit (Download → ZIP)
-3. Extrae la carpeta
-4. Abre PowerShell en la carpeta y ejecuta:
+1. Descarga el proyecto desde Replit (Download → ZIP)
+2. Extrae la carpeta
+3. Abre PowerShell en la carpeta y ejecuta:
    ```bash
    npm install
+   build-exe.bat
    ```
-5. **Opción automática**: Click derecho en `installer-windows.bat` → "Ejecutar como administrador"
+4. Espera a que compile (1-2 minutos)
+5. **Click derecho en `installer-exe.bat`** → "Ejecutar como administrador"
    - ¡Listo! Aparecerá en tu menú Inicio
-6. **Opción manual**: Ejecuta `npm run launcher` desde PowerShell
+   - **NO necesitas Node.js instalado** después de esto
+
+**O si prefieres con Node.js:**
+1. Instala Node.js desde https://nodejs.org/
+2. Descarga y extrae el proyecto
+3. `npm install`
+4. Click derecho en `installer-windows.bat` → "Ejecutar como administrador"
 
 Ver detalles completos en `install-instructions.md`
 

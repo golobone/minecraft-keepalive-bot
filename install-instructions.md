@@ -2,40 +2,38 @@
 
 ## Windows (Recomendado)
 
-### Opción 1: Instalador Automático (EASIEST)
+### Opción 1: Instalador .EXE Compilado (MEJOR - SIN NODE.JS REQUERIDO)
 
 1. **Descarga el proyecto** desde Replit (Download → ZIP)
 2. **Extrae la carpeta** en tu PC
-3. **Abre PowerShell o CMD** en la carpeta del proyecto
+3. **Abre PowerShell/CMD** en esa carpeta
 4. **Ejecuta**:
+   ```bash
+   npm install
+   build-exe.bat
+   ```
+5. Espera a que compile el .exe (1-2 minutos)
+6. **Click derecho en `installer-exe.bat`** → "Ejecutar como administrador"
+7. ¡Listo! La app estará en tu menú Inicio sin necesidad de Node.js
+
+### Opción 2: Instalador Tradicional (CON NODE.JS)
+
+1. **Descarga el proyecto** desde Replit (Download → ZIP)
+2. **Extrae la carpeta** en tu PC
+3. **Instala Node.js** desde https://nodejs.org/
+4. **Abre PowerShell/CMD** en la carpeta y ejecuta:
    ```bash
    npm install
    ```
 5. **Click derecho en `installer-windows.bat`** → "Ejecutar como administrador"
-6. ¡Listo! La app aparecerá en tu menú Inicio y escritorio
+6. ¡Listo! La app aparecerá en tu menú Inicio
 
-### Opción 2: Crear Ejecutable Standalone (.exe)
+### Opción 3: Ejecutar Directo Sin Instalar
 
-1. Realiza los pasos 1-4 de arriba
-2. En PowerShell ejecuta:
-   ```bash
-   npm install -g pkg
-   npm run build:windows
-   ```
-3. Se creará un archivo `MCBotApp.exe` que puedes ejecutar directamente
-4. Copia este .exe a donde quieras (escritorio, documentos, etc)
-
-### Opción 3: Menú Inicio Manual
-
-1. Abre la carpeta donde extrajiste el proyecto
-2. Click derecho en `launcher.js` → Crear acceso directo
-3. Renombralo a "Minecraft Bot App"
-4. Click derecho → Propiedades → Destino
-5. Cambia a: `cmd /k cd "C:\ruta\a\carpeta" && npm run launcher`
-6. Mueve el acceso directo a:
-   ```
-   C:\Users\TuUsuario\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
-   ```
+1. Descarga el proyecto y extrae
+2. Ejecuta `build-exe.bat`
+3. Se creará `MCBotApp.exe` que puedes ejecutar desde cualquier lado
+4. Puedes ponerlo en el escritorio o donde quieras
 
 ---
 
@@ -118,17 +116,21 @@ ATERNOS_PASSWORD=tu_contraseña_aternos
 
 ## Desinstalación
 
-### Windows (Automática - RECOMENDADO)
+### Windows (Si instalaste con .exe - RECOMENDADO)
 1. Busca en tu PC la carpeta: `C:\Program Files\MinecraftBotApp`
-2. Haz click derecho en `uninstall.bat`
+2. Click derecho en `uninstall-app.bat`
 3. Selecciona "Ejecutar como administrador"
-4. Confirma que deseas desinstalar
-5. ¡Listo! Todo se eliminará automáticamente
+4. ¡Listo! Todo se eliminará automáticamente
+
+### Windows (Si instalaste con los .bat iniciales)
+1. Busca la carpeta: `C:\Program Files\MinecraftBotApp`
+2. Click derecho en `uninstall.bat`
+3. Selecciona "Ejecutar como administrador"
+4. ¡Listo!
 
 ### Windows (Manual)
-- Abre Panel de Control → Programas → Programas y características
-- Busca "Minecraft Bot App" y desinstala
-- O simplemente elimina la carpeta: `C:\Program Files\MinecraftBotApp`
+- Simplemente elimina la carpeta: `C:\Program Files\MinecraftBotApp`
+- Borra los accesos directos del Menú Inicio y Escritorio
 
 ### Mac
 - Arrastra la app a la Papelera
