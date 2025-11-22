@@ -118,16 +118,28 @@ ATERNOS_PASSWORD=tu_contraseña_aternos
 
 ## Desinstalación
 
-### Windows
-- Busca "Minecraft Bot App" en Inicio
-- Click derecho → Desinstalar
-- O elimina la carpeta: `C:\Program Files\MinecraftBotApp`
+### Windows (Automática - RECOMENDADO)
+1. Busca en tu PC la carpeta: `C:\Program Files\MinecraftBotApp`
+2. Haz click derecho en `uninstall.bat`
+3. Selecciona "Ejecutar como administrador"
+4. Confirma que deseas desinstalar
+5. ¡Listo! Todo se eliminará automáticamente
+
+### Windows (Manual)
+- Abre Panel de Control → Programas → Programas y características
+- Busca "Minecraft Bot App" y desinstala
+- O simplemente elimina la carpeta: `C:\Program Files\MinecraftBotApp`
 
 ### Mac
 - Arrastra la app a la Papelera
+- Vacía la papelera
 
 ### Linux
-- Elimina el archivo `.desktop`
+- Elimina el archivo `.desktop`:
+  ```bash
+  rm ~/.local/share/applications/minecraft-bot.desktop
+  ```
+- Elimina la carpeta del proyecto
 
 ---
 

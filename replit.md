@@ -41,6 +41,9 @@ ATERNOS_PASSWORD=tu_contraseña
 .
 ├── bot.js                    # Punto de entrada principal
 ├── launcher.js              # Panel de control (menú)
+├── installer-windows.bat    # Instalador automático
+├── uninstaller-windows.bat  # Desinstalador automático
+├── install-instructions.md  # Guía de instalación
 ├── package.json             # Dependencias
 ├── src/
 │   ├── config.js            # Configuración centralizada

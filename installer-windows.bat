@@ -75,6 +75,24 @@ set BATCH_SCRIPT="%INSTALL_DIR%\run.bat"
     echo pause
 ) > !BATCH_SCRIPT!
 
+REM Crear batch para desinstalar
+set UNINSTALL_SCRIPT="%INSTALL_DIR%\uninstall.bat"
+(
+    echo @echo off
+    echo REM Desinstalador local
+    echo setlocal enabledelayedexpansion
+    echo set INSTALL_DIR=%ProgramFiles%\MinecraftBotApp
+    echo set SHORTCUT_DIR=%%APPDATA%%\Microsoft\Windows\Start Menu\Programs
+    echo set DESKTOP=%%USERPROFILE%%\Desktop
+    echo echo.
+    echo echo Desinstalando Minecraft Bot App...
+    echo if exist "%%SHORTCUT_DIR%%\Minecraft Bot App.lnk" del "%%SHORTCUT_DIR%%\Minecraft Bot App.lnk"
+    echo if exist "%%DESKTOP%%\Minecraft Bot App.lnk" del "%%DESKTOP%%\Minecraft Bot App.lnk"
+    echo if exist "%%INSTALL_DIR%%" rmdir /s /q "%%INSTALL_DIR%%"
+    echo echo ✅ Desinstalacion completada
+    echo pause
+) > !UNINSTALL_SCRIPT!
+
 REM Crear acceso directo en el escritorio también
 set DESKTOP_SHORTCUT_VBS="%INSTALL_DIR%\create-desktop-shortcut.vbs"
 (
@@ -101,5 +119,9 @@ echo.
 echo Puedes ejecutarla desde:
 echo   1. Menú Inicio - "Minecraft Bot App"
 echo   2. Escritorio - "Minecraft Bot App"
+echo.
+echo Para desinstalar:
+echo   1. Click derecho en "uninstall.bat" en la carpeta de instalación
+echo   2. O busca "uninstall.bat" en: %INSTALL_DIR%
 echo.
 pause
