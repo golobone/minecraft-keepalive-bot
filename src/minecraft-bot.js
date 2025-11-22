@@ -71,8 +71,8 @@ class MinecraftBot {
       if (this.discordNotifier) {
         this.discordNotifier.notifyBotDisconnected(`Expulsado: ${reason}`);
       }
-      // No reconectar automáticamente si fue expulsado
-      // El bot se mantiene desconectado hasta que el usuario lo reinicie
+      this.reconnect();
+      this.reconnect();
     });
 
     this.bot.on('end', (reason) => {
