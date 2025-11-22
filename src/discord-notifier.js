@@ -3,6 +3,7 @@ const axios = require('axios');
 class DiscordNotifier {
   constructor(webhookUrl) {
     this.webhookUrl = webhookUrl;
+    this.lastMessageId = null;
     const isValid = webhookUrl && typeof webhookUrl === 'string' && webhookUrl.startsWith('https://');
     this.isEnabled = !!isValid;
     
@@ -15,6 +16,22 @@ class DiscordNotifier {
     }
   }
 
+  async deleteLastMessage() {
+    if (!this.lastMessageId || !this.isEnabled) return;
+
+    try {
+      const deleteUrl = `${this.webhookUrl}/messages/${this.lastMessageId}`;
+      await axios.delete(deleteUrl, {
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 5000
+      });
+      console.log('🗑️ Mensaje anterior eliminado de Discord');
+      this.lastMessageId = null;
+    } catch (err) {
+      // No imprimir error si el mensaje no existe
+    }
+  }
+
   async sendNotification(title, description, color = 3447003, fields = []) {
     if (!this.isEnabled) {
       console.log(`[Discord] ${title}: ${description}`);
@@ -22,6 +39,9 @@ class DiscordNotifier {
     }
 
     try {
+      // Borrar mensaje anterior
+      await this.deleteLastMessage();
+
       const embed = {
         title: title,
         description: description,
@@ -41,10 +61,15 @@ class DiscordNotifier {
         embeds: [embed]
       };
 
-      await axios.post(this.webhookUrl, payload, {
+      const response = await axios.post(this.webhookUrl, payload, {
         headers: { 'Content-Type': 'application/json' },
         timeout: 5000
       });
+      
+      // Guardar ID del nuevo mensaje
+      if (response.data && response.data.id) {
+        this.lastMessageId = response.data.id;
+      }
       
       console.log(`✅ Notificación enviada a Discord: ${title}`);
     } catch (err) {
