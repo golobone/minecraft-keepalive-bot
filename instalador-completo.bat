@@ -1,5 +1,5 @@
 @echo off
-REM Instalador Completo de Minecraft Bot - Descarga Node.js si lo necesita
+REM Instalador Completo de Minecraft Bot
 setlocal enabledelayedexpansion
 
 echo.
@@ -10,38 +10,33 @@ echo.
 
 REM Verificar si Node.js está instalado
 node --version >nul 2>&1
-if errorlevel 1 (
-    echo Node.js no detectado. Descargando e instalando...
-    echo.
-    
-    REM Descargar Node.js LTS
-    powershell -Command "(New-Object System.Net.ServicePointManager).SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; (New-Object System.Net.WebClient).DownloadFile('https://nodejs.org/dist/v20.11.1/node-v20.11.1-x64.msi', '%TEMP%\nodejs.msi')"
-    
-    if errorlevel 1 (
-        echo Error: No se pudo descargar Node.js
-        echo Por favor, instala Node.js manualmente desde https://nodejs.org/
-        pause
-        exit /b 1
-    )
-    
-    echo Instalando Node.js...
-    msiexec /i "%TEMP%\nodejs.msi" /quiet /norestart
-    
-    echo.
-    echo Node.js instalado. Reinicia PowerShell y ejecuta este archivo de nuevo.
-    pause
-    exit /b 0
+if %errorlevel% equ 0 (
+    echo ✅ Node.js ya está instalado
+    goto :INSTALAR
 )
 
-echo ✅ Node.js detectado
-node --version
+echo Node.js no detectado.
 echo.
+echo Para instalar automáticamente, necesitas descargar Node.js.
+echo.
+echo Abriendo navegador para descargar Node.js...
+start https://nodejs.org/dist/v20.11.1/node-v20.11.1-x64.msi
+echo.
+echo 1. Haz click en GUARDAR
+echo 2. Espera a que termine la descarga
+echo 3. Haz doble click en el archivo descargado (nodejs.msi)
+echo 4. Sigue los pasos de instalacion
+echo 5. Reinicia tu PC
+echo 6. Ejecuta este archivo de nuevo
+echo.
+pause
+exit /b 0
 
-REM Ya tenemos Node.js, proceder con npm install
+:INSTALAR
 echo Instalando dependencias...
 call npm install
 
-if errorlevel 1 (
+if %errorlevel% neq 0 (
     echo Error al instalar dependencias
     pause
     exit /b 1
@@ -49,34 +44,29 @@ if errorlevel 1 (
 
 echo ✅ Dependencias instaladas
 echo.
-
-REM Compilar .exe
-echo Compilando aplicacion (.exe)...
-echo Esto puede tomar 1-2 minutos...
+echo Compilando aplicacion (esto puede tomar 1-2 minutos)...
 echo.
 
-call npm run build:windows
+REM Intentar compilar con pkg
+call npm install -g pkg 2>nul
 
-if errorlevel 1 (
-    echo Compilacion fallida. Intentando alternativa...
+if %errorlevel% equ 0 (
+    call npx pkg launcher.js -t win-x64 -o MCBotApp.exe --compress Brotli 2>nul
     
-    REM Alternativa si pkg falla
-    echo Usando metodo alternativo...
-    powershell -Command "cd '%cd%' ; npm install -g pkg ; pkg launcher.js -t win-x64 -o MCBotApp.exe --compress Brotli"
-    
-    if errorlevel 1 (
-        echo Error: No se pudo compilar el .exe
-        echo Pero puedes ejecutar el bot con: npm run launcher
-        pause
-        exit /b 1
+    if %errorlevel% equ 0 (
+        echo ✅ Aplicacion compilada exitosamente
+        goto :INSTALAR_APP
     )
 )
 
-echo ✅ Aplicacion compilada: MCBotApp.exe
+echo.
+echo ⚠️  Compilacion de .exe fallida, pero puedo instalar el bot con Node.js
 echo.
 
-REM Instalar
+:INSTALAR_APP
 echo Instalando en el sistema...
+echo.
+
 if exist "installer-exe.bat" (
     call installer-exe.bat
 ) else (
@@ -85,11 +75,4 @@ if exist "installer-exe.bat" (
     exit /b 1
 )
 
-echo.
-echo ========================================
-echo   ✅ ¡INSTALACION COMPLETADA!
-echo ========================================
-echo.
-echo Busca "Minecraft Bot App" en tu menu Inicio
-echo.
 pause
