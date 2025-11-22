@@ -10,7 +10,13 @@ let discordNotifier = null;
 
 // Health check server TCP para Koyeb
 const healthServer = net.createServer((socket) => {
-  socket.end();
+  socket.destroy();
+});
+
+healthServer.on('error', (err) => {
+  if (err.code !== 'EADDRINUSE') {
+    console.error('🏥 Error en health check server:', err.message);
+  }
 });
 
 healthServer.listen(9999, '0.0.0.0', () => {
