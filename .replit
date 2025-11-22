@@ -28,3 +28,6 @@ outputType = "console"
 [deployment]
 deploymentTarget = "vm"
 run = ["npm", "start"]
+
+[nix]
+packages = ["zip"]
