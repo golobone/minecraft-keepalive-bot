@@ -58,25 +58,17 @@ ATERNOS_PASSWORD=tu_contraseña
 
 ## Uso
 
-### En tu PC COMO APLICACIÓN (RECOMENDADO - .EXE)
+### En tu PC COMO APLICACIÓN (RECOMENDADO - AUTOMÁTICO)
 
-1. Descarga el proyecto desde Replit (Download → ZIP)
-2. Extrae la carpeta
-3. Abre PowerShell en la carpeta y ejecuta:
-   ```bash
-   npm install
-   build-exe.bat
-   ```
-4. Espera a que compile (1-2 minutos)
-5. **Click derecho en `installer-exe.bat`** → "Ejecutar como administrador"
-   - ¡Listo! Aparecerá en tu menú Inicio
-   - **NO necesitas Node.js instalado** después de esto
+**¡LA FORMA MÁS FÁCIL!** - Un solo click y se instala todo automáticamente:
 
-**O si prefieres con Node.js:**
-1. Instala Node.js desde https://nodejs.org/
-2. Descarga y extrae el proyecto
-3. `npm install`
-4. Click derecho en `installer-windows.bat` → "Ejecutar como administrador"
+1. Descarga **`minecraft-app-final.zip`** desde Replit
+2. **Extrae el ZIP**
+3. **Click derecho en `instalador-completo.bat`** → "Ejecutar como administrador"
+4. ¡**LISTO!** Automáticamente:
+   - Descargará e instalará Node.js si no lo tienes
+   - Compilará el .exe
+   - Instalará la app en tu menú Inicio
 
 Ver detalles completos en `install-instructions.md`
 

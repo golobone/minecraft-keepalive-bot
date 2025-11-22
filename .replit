@@ -35,7 +35,3 @@ packages = ["zip"]
 [[ports]]
 localPort = 8000
 externalPort = 80
-
-[[ports]]
-localPort = 41011
-externalPort = 3000
