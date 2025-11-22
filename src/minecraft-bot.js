@@ -8,7 +8,7 @@ class MinecraftBot {
     this.movementInterval = null;
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 10;
-    this.baseReconnectDelay = 30000; // 30 segundos (fue 10s)
+    this.baseReconnectDelay = 10000;
     this.hasInitialized = false;
   }
 
@@ -187,7 +187,7 @@ class MinecraftBot {
       return;
     }
     
-    const delay = Math.min(this.baseReconnectDelay * Math.pow(1.5, this.reconnectAttempts - 1), 120000); // máx 2 minutos
+    const delay = Math.min(this.baseReconnectDelay * Math.pow(1.5, this.reconnectAttempts - 1), 60000);
     const seconds = Math.round(delay / 1000);
     
     console.log(`🔄 Reconectando en ${seconds} segundos... (Intento ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);

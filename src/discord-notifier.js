@@ -4,8 +4,6 @@ class DiscordNotifier {
   constructor(webhookUrl) {
     this.webhookUrl = webhookUrl;
     this.lastMessageId = null;
-    this.lastNotificationTime = 0;
-    this.minNotificationInterval = 2000; // Mínimo 2 segundos entre notificaciones
     const isValid = webhookUrl && typeof webhookUrl === 'string' && webhookUrl.startsWith('https://');
     this.isEnabled = !!isValid;
     
@@ -37,13 +35,6 @@ class DiscordNotifier {
   async sendNotification(title, description, color = 3447003, fields = []) {
     if (!this.isEnabled) {
       console.log(`[Discord] ${title}: ${description}`);
-      return;
-    }
-
-    // Rate limiter: evitar enviar más de un mensaje cada 2 segundos
-    const now = Date.now();
-    if (now - this.lastNotificationTime < this.minNotificationInterval) {
-      console.log(`⏳ Notificación pendiente de Discord (rate limit)`);
       return;
     }
 
@@ -80,7 +71,6 @@ class DiscordNotifier {
         this.lastMessageId = response.data.id;
       }
       
-      this.lastNotificationTime = Date.now();
       console.log(`✅ Notificación enviada a Discord: ${title}`);
     } catch (err) {
       console.error(`❌ Error al enviar notificación a Discord:`, err.message);
