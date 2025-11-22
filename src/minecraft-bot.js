@@ -40,8 +40,8 @@ class MinecraftBot {
         // Esperar a que el bot esté completamente listo
         setTimeout(() => {
           try {
-            // Enviar comandos con mayor separación
-            this.bot.chat('/tp 0 70 0');
+            // Enviar comandos con mayor separación (silencioso - sin chat)
+            // this.bot.chat('/tp 0 70 0');
             console.log('📍 Comando teletransporte enviado');
           } catch (err) {
             console.log('⚠️  No se pudo enviar teletransporte:', err.message);
@@ -50,7 +50,7 @@ class MinecraftBot {
           // Esperar más antes de espectador
           setTimeout(() => {
             try {
-              this.bot.chat('/gamemode spectator');
+              // this.bot.chat('/gamemode spectator');
               console.log('👻 Comando espectador enviado');
             } catch (err) {
               console.log('⚠️  No se pudo enviar espectador:', err.message);
