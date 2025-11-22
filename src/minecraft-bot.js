@@ -71,7 +71,17 @@ class MinecraftBot {
       if (this.discordNotifier) {
         this.discordNotifier.notifyBotDisconnected(`Expulsado: ${reason}`);
       }
-      this.reconnect();
+      
+      // Si es throttled, esperar más tiempo
+      if (reason && reason.includes('throttled')) {
+        console.log('⏳ Servidor limitando conexiones - esperando 2 minutos...');
+        setTimeout(() => {
+          this.reconnectAttempts = 0;
+          this.reconnect();
+        }, 120000); // 2 minutos
+      } else {
+        this.reconnect();
+      }
     });
 
     this.bot.on('end', (reason) => {
