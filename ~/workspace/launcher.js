@@ -2,7 +2,6 @@
 
 const { spawn } = require('child_process');
 const fs = require('fs');
-const path = require('path');
 const readline = require('readline');
 
 require('dotenv').config();
@@ -21,28 +20,24 @@ function question(prompt) {
 }
 
 async function setupEnv() {
-  console.log('\n⚙️  PRIMERA VEZ - Configurar credenciales\n');
-  const username = await question('Usuario Aternos: ');
-  const password = await question('Contraseña Aternos: ');
-  const webhook = await question('Discord Webhook (Enter para saltar): ');
+  console.log('\n📝 Primeras credenciales\n');
+  const webhook = await question('Discord Webhook URL (Enter para saltar): ');
 
-  let env = `ATERNOS_USERNAME=${username}\nATERNOS_PASSWORD=${password}\n`;
-  if (webhook.trim()) env += `DISCORD_WEBHOOK_URL=${webhook}\n`;
+  let env = '';
+  if (webhook.trim()) env = `DISCORD_WEBHOOK_URL=${webhook}\n`;
 
   fs.writeFileSync('.env', env);
-  process.env.ATERNOS_USERNAME = username;
-  process.env.ATERNOS_PASSWORD = password;
   if (webhook.trim()) process.env.DISCORD_WEBHOOK_URL = webhook;
 
-  console.log('\n✅ Guardado!\n');
+  console.log('\n✅ Listo!\n');
 }
 
 function startBot() {
   if (botProcess) {
-    console.log('Bot ya está corriendo\n');
+    console.log('\n⚠️  Bot ya está corriendo\n');
     return;
   }
-  console.log('🤖 Iniciando bot...\n');
+  console.log('\n🤖 Bot iniciando...\n');
   botProcess = spawn('node', ['bot.js'], {
     stdio: 'inherit',
     cwd: process.cwd()
@@ -52,12 +47,12 @@ function startBot() {
 
 function stopBot() {
   if (!botProcess) {
-    console.log('Bot no está corriendo\n');
+    console.log('\n⚠️  Bot no está corriendo\n');
     return;
   }
   botProcess.kill('SIGTERM');
   botProcess = null;
-  console.log('✅ Bot detenido\n');
+  console.log('\n✅ Bot detenido\n');
 }
 
 async function menu() {
@@ -81,18 +76,19 @@ async function menu() {
       stopBot();
       break;
     case '0':
-      console.log('Saliendo...\n');
+      console.log('\n👋 Saliendo\n');
       rl.close();
       process.exit(0);
     default:
-      console.log('Inválido\n');
+      console.log('\n❌ Inválido\n');
   }
 
   setTimeout(menu, 2000);
 }
 
 async function init() {
-  if (!process.env.ATERNOS_USERNAME || !process.env.ATERNOS_PASSWORD) {
+  const envExists = fs.existsSync('.env');
+  if (!envExists) {
     await setupEnv();
   }
   menu();
