@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const http = require('http');
+const net = require('net');
 const MinecraftBot = require('./src/minecraft-bot');
 const DiscordNotifier = require('./src/discord-notifier');
 const config = require('./src/config');
@@ -8,15 +8,9 @@ const config = require('./src/config');
 let bot = null;
 let discordNotifier = null;
 
-// Health check server para Koyeb
-const healthServer = http.createServer((req, res) => {
-  if (req.url === '/' || req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok' }));
-  } else {
-    res.writeHead(404);
-    res.end();
-  }
+// Health check server TCP para Koyeb
+const healthServer = net.createServer((socket) => {
+  socket.end();
 });
 
 healthServer.listen(9999, '0.0.0.0', () => {
