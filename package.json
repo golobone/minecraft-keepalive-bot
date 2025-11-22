@@ -5,7 +5,8 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "dev": "node bot.js"
+    "dev": "node bot.js",
+    "launcher": "node launcher.js"
   },
   "keywords": ["minecraft", "bot", "keepalive", "aternos", "discord"],
   "author": "",

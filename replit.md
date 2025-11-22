@@ -40,6 +40,7 @@ ATERNOS_PASSWORD=tu_contraseña
 ```
 .
 ├── bot.js                    # Punto de entrada principal
+├── launcher.js              # Panel de control (menú)
 ├── package.json             # Dependencias
 ├── src/
 │   ├── config.js            # Configuración centralizada
@@ -52,7 +53,22 @@ ATERNOS_PASSWORD=tu_contraseña
 
 ## Uso
 
-### Local con Replit
+### En tu PC (RECOMENDADO)
+
+1. Instala Node.js desde https://nodejs.org/
+2. Descarga el proyecto desde Replit (Download → ZIP)
+3. Extrae la carpeta y abre Terminal/PowerShell en ella
+4. Ejecuta:
+   ```bash
+   npm install
+   npm run launcher
+   ```
+5. Verás un menú con opciones para:
+   - Iniciar/Detener el bot
+   - Encender/Apagar servidor Aternos automáticamente
+   - Ver estado de todo
+
+### En Replit
 
 1. Configura las variables de entorno en Secrets
 2. Ejecuta `npm start` o usa el workflow automático
