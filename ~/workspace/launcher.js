@@ -3,169 +3,99 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const prompt = require('prompt-sync')();
+const readline = require('readline');
 
 require('dotenv').config();
 
-const AternosClient = require('./src/aternos-client.js');
-
 let botProcess = null;
 
-async function setupCredentials() {
-  console.clear();
-  console.log('╔════════════════════════════════════════╗');
-  console.log('║      ⚙️  CONFIGURAR CREDENCIALES       ║');
-  console.log('╚════════════════════════════════════════╝\n');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-  const username = prompt('👤 Usuario de Aternos: ');
-  const password = prompt('🔐 Contraseña de Aternos: ', { echo: '*' });
-  const webhook = prompt('🔗 Discord Webhook (Enter para saltar): ');
+function question(prompt) {
+  return new Promise(resolve => {
+    rl.question(prompt, resolve);
+  });
+}
 
-  let envContent = `ATERNOS_USERNAME=${username}\nATERNOS_PASSWORD=${password}\n`;
-  if (webhook.trim()) {
-    envContent += `DISCORD_WEBHOOK_URL=${webhook}\n`;
-  }
+async function setupEnv() {
+  console.log('\n⚙️  PRIMERA VEZ - Configurar credenciales\n');
+  const username = await question('Usuario Aternos: ');
+  const password = await question('Contraseña Aternos: ');
+  const webhook = await question('Discord Webhook (Enter para saltar): ');
 
-  fs.writeFileSync(path.join(process.cwd(), '.env'), envContent);
-  console.log('\n✅ Credenciales guardadas\n');
+  let env = `ATERNOS_USERNAME=${username}\nATERNOS_PASSWORD=${password}\n`;
+  if (webhook.trim()) env += `DISCORD_WEBHOOK_URL=${webhook}\n`;
 
+  fs.writeFileSync('.env', env);
   process.env.ATERNOS_USERNAME = username;
   process.env.ATERNOS_PASSWORD = password;
   if (webhook.trim()) process.env.DISCORD_WEBHOOK_URL = webhook;
-}
 
-async function initializeAternos() {
-  const username = process.env.ATERNOS_USERNAME;
-  const password = process.env.ATERNOS_PASSWORD;
-
-  if (!username || !password) {
-    console.log('⚠️  Necesitas configurar tus credenciales primero\n');
-    await setupCredentials();
-    return initializeAternos();
-  }
-
-  const client = new AternosClient();
-  const authenticated = await client.authenticate(username, password);
-
-  if (!authenticated) {
-    console.log('❌ Error de autenticación\n');
-    return null;
-  }
-
-  return client;
+  console.log('\n✅ Guardado!\n');
 }
 
 function startBot() {
   if (botProcess) {
-    console.log('⚠️  Bot ya está corriendo\n');
+    console.log('Bot ya está corriendo\n');
     return;
   }
-
   console.log('🤖 Iniciando bot...\n');
   botProcess = spawn('node', ['bot.js'], {
     stdio: 'inherit',
     cwd: process.cwd()
   });
-
-  botProcess.on('exit', () => {
-    botProcess = null;
-  });
+  botProcess.on('exit', () => { botProcess = null; });
 }
 
 function stopBot() {
   if (!botProcess) {
-    console.log('⚠️  Bot no está corriendo\n');
+    console.log('Bot no está corriendo\n');
     return;
   }
-
   botProcess.kill('SIGTERM');
   botProcess = null;
   console.log('✅ Bot detenido\n');
 }
 
-async function startAternos(client) {
-  if (!client) {
-    console.log('❌ Aternos no disponible\n');
-    return;
-  }
-
-  const success = await client.startServer();
-  if (success) {
-    console.log('✅ Aternos iniciando... (espera 30-60 seg)\n');
-  } else {
-    console.log('❌ Error al iniciar Aternos\n');
-  }
-}
-
-async function stopAternos(client) {
-  if (!client) {
-    console.log('❌ Aternos no disponible\n');
-    return;
-  }
-
-  const success = await client.stopServer();
-  if (success) {
-    console.log('✅ Aternos detenido\n');
-  } else {
-    console.log('❌ Error al detener Aternos\n');
-  }
-}
-
-async function showMenu() {
+async function menu() {
   console.clear();
   console.log(`
 ╔════════════════════════════════════════╗
-║     🎮 MINECRAFT BOT - CONTROL        ║
+║     🎮 MINECRAFT BOT                  ║
 ╚════════════════════════════════════════╝
-
-1) 🚀 Iniciar Bot + Aternos
-2) 🤖 Solo Bot
-3) ⚡ Encender Aternos
-4) 🔌 Apagar Aternos
-5) ⏹️  Detener Bot
-6) 🔑 Reconfigurar Credenciales
-0) ❌ Salir
+1) Iniciar Bot
+2) Detener Bot
+0) Salir
 `);
 
-  const choice = prompt('Elige una opción (0-6): ').trim();
+  const choice = await question('Opción: ');
 
-  const client = await initializeAternos();
-
-  switch (choice) {
+  switch (choice.trim()) {
     case '1':
-      console.log('⏳ Encendiendo Aternos y bot...\n');
-      await startAternos(client);
-      setTimeout(() => startBot(), 2000);
-      break;
-    case '2':
       startBot();
       break;
-    case '3':
-      await startAternos(client);
-      break;
-    case '4':
-      await stopAternos(client);
-      break;
-    case '5':
+    case '2':
       stopBot();
       break;
-    case '6':
-      await setupCredentials();
-      break;
     case '0':
-      console.log('👋 Saliendo...\n');
+      console.log('Saliendo...\n');
+      rl.close();
       process.exit(0);
-      break;
     default:
-      console.log('❌ Opción inválida\n');
+      console.log('Inválido\n');
   }
 
-  setTimeout(showMenu, 2000);
+  setTimeout(menu, 2000);
 }
 
-console.log('🚀 Iniciando Minecraft Bot...\n');
+async function init() {
+  if (!process.env.ATERNOS_USERNAME || !process.env.ATERNOS_PASSWORD) {
+    await setupEnv();
+  }
+  menu();
+}
 
-showMenu().catch(err => {
-  console.error('❌ Error:', err.message);
-  setTimeout(() => process.exit(1), 1000);
-});
+init();
