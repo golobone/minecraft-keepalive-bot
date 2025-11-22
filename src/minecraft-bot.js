@@ -109,6 +109,7 @@ class MinecraftBot {
       if (this.discordNotifier) {
         this.discordNotifier.notifyError(errorName, err.message);
       }
+      this.reconnect();
     });
 
     this.bot.on('message', (message) => {
