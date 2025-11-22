@@ -15,22 +15,30 @@ class DiscordNotifier {
     }
   }
 
-  async sendNotification(title, description, color = 3447003) {
+  async sendNotification(title, description, color = 3447003, fields = []) {
     if (!this.isEnabled) {
       console.log(`[Discord] ${title}: ${description}`);
       return;
     }
 
     try {
+      const embed = {
+        title: title,
+        description: description,
+        color: color,
+        timestamp: new Date().toISOString(),
+        footer: {
+          text: 'Minecraft Keepalive Bot',
+          icon_url: 'https://crafatar.com/avatars/00000000000000000000000000000000?overlay'
+        }
+      };
+
+      if (fields.length > 0) {
+        embed.fields = fields;
+      }
+
       const payload = {
-        embeds: [
-          {
-            title: title,
-            description: description,
-            color: color,
-            timestamp: new Date().toISOString()
-          }
-        ]
+        embeds: [embed]
       };
 
       await axios.post(this.webhookUrl, payload, {
@@ -78,32 +86,58 @@ class DiscordNotifier {
   async notifyBotConnected() {
     await this.sendNotification(
       '🤖 Bot conectado',
-      'El bot de Minecraft se ha conectado exitosamente al servidor.',
-      3447003
+      '✅ El bot se ha conectado exitosamente y está en modo espectador.',
+      3066993,
+      [
+        { name: '📍 Ubicación', value: '0, 70, 0', inline: true },
+        { name: '⚙️ Modo', value: 'Espectador', inline: true },
+        { name: '🔄 Estado', value: 'Activo', inline: true }
+      ]
     );
   }
 
   async notifyBotDisconnected(reason) {
     await this.sendNotification(
       '🔌 Bot desconectado',
-      `Razón: ${reason}`,
-      16711680
+      `**Razón:** ${reason}\n\n⏳ Intentando reconectar automáticamente...`,
+      15158332,
+      [
+        { name: '⚠️ Estado', value: 'Offline', inline: true },
+        { name: '🔄 Reconexión', value: 'Activa', inline: true }
+      ]
     );
   }
 
   async notifyReconnectionAttempt(attempt, maxAttempts, waitTime) {
+    const seconds = Math.round(waitTime / 1000);
+    const progressBar = this.createProgressBar(attempt, maxAttempts);
+    
     await this.sendNotification(
-      '🔄 Reintentando conexión',
-      `Intento ${attempt}/${maxAttempts} - Esperando ${Math.round(waitTime / 1000)}s`,
-      16776960
+      '🔄 Reconectando...',
+      `**Intento ${attempt}/${maxAttempts}**\n\n⏱️ Esperando ${seconds}s antes del siguiente intento\n\n\`\`\`\n${progressBar}\n\`\`\``,
+      16776960,
+      [
+        { name: '📊 Progreso', value: `${attempt}/${maxAttempts}`, inline: true },
+        { name: '⏳ Espera', value: `${seconds}s`, inline: true }
+      ]
     );
+  }
+
+  createProgressBar(current, max) {
+    const filled = Math.round((current / max) * 10);
+    const empty = 10 - filled;
+    return '[' + '█'.repeat(filled) + '░'.repeat(empty) + ']';
   }
 
   async notifyError(title, error) {
     await this.sendNotification(
       `❌ ${title}`,
-      `Error: ${error}`,
-      16711680
+      `**Error detectado:**\n\`\`\`\n${error}\n\`\`\`\n\n🔄 Reconectando automáticamente...`,
+      15158332,
+      [
+        { name: '⚠️ Tipo', value: title, inline: true },
+        { name: '🕐 Hora', value: new Date().toLocaleTimeString('es-ES'), inline: true }
+      ]
     );
   }
 
