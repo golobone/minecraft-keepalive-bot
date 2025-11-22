@@ -1,16 +1,13 @@
 {
   "name": "minecraft-keepalive-bot",
   "version": "2.0.0",
-  "description": "Bot de Minecraft con Aternos y notificaciones Discord. Mantiene servidores de Aternos activos y envía notificaciones de estado.",
+  "description": "Bot de Minecraft con Aternos y notificaciones Discord.",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
     "dev": "node bot.js",
     "launcher": "node launcher.js",
-    "build": "pkg launcher.js -o MCBotApp --compress Brotli",
-    "build:windows": "pkg launcher.js -t node18-win-x64 -o MCBotApp.exe --compress Brotli",
-    "build:mac": "pkg launcher.js -t macos-x64 -o MCBotApp --compress Brotli",
-    "build:linux": "pkg launcher.js -t linux-x64 -o MCBotApp --compress Brotli"
+    "build:windows": "pkg launcher.js -t node18-win-x64 -o MCBotApp.exe --compress Brotli"
   },
   "pkg": {
     "scripts": ["bot.js", "launcher.js"],
@@ -22,8 +19,8 @@
   "dependencies": {
     "axios": "^1.6.0",
     "dotenv": "^16.0.0",
-    "inquirer": "^8.2.5",
-    "mineflayer": "^4.20.1"
+    "mineflayer": "^4.20.1",
+    "prompt-sync": "^4.2.0"
   },
   "devDependencies": {
     "pkg": "^5.8.1"

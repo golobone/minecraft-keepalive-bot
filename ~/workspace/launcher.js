@@ -3,7 +3,7 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const inquirer = require('inquirer');
+const prompt = require('prompt-sync')();
 
 require('dotenv').config();
 
@@ -12,38 +12,26 @@ const AternosClient = require('./src/aternos-client.js');
 let botProcess = null;
 
 async function setupCredentials() {
-  const answers = await inquirer.prompt([
-    {
-      type: 'password',
-      name: 'username',
-      message: '👤 Usuario de Aternos:',
-      mask: '*'
-    },
-    {
-      type: 'password',
-      name: 'password',
-      message: '🔐 Contraseña de Aternos:',
-      mask: '*'
-    },
-    {
-      type: 'input',
-      name: 'webhook',
-      message: '🔗 Discord Webhook (Enter para saltar):',
-      default: ''
-    }
-  ]);
+  console.clear();
+  console.log('╔════════════════════════════════════════╗');
+  console.log('║      ⚙️  CONFIGURAR CREDENCIALES       ║');
+  console.log('╚════════════════════════════════════════╝\n');
 
-  let envContent = `ATERNOS_USERNAME=${answers.username}\nATERNOS_PASSWORD=${answers.password}\n`;
-  if (answers.webhook) {
-    envContent += `DISCORD_WEBHOOK_URL=${answers.webhook}\n`;
+  const username = prompt('👤 Usuario de Aternos: ');
+  const password = prompt('🔐 Contraseña de Aternos: ', { echo: '*' });
+  const webhook = prompt('🔗 Discord Webhook (Enter para saltar): ');
+
+  let envContent = `ATERNOS_USERNAME=${username}\nATERNOS_PASSWORD=${password}\n`;
+  if (webhook.trim()) {
+    envContent += `DISCORD_WEBHOOK_URL=${webhook}\n`;
   }
 
   fs.writeFileSync(path.join(process.cwd(), '.env'), envContent);
   console.log('\n✅ Credenciales guardadas\n');
 
-  process.env.ATERNOS_USERNAME = answers.username;
-  process.env.ATERNOS_PASSWORD = answers.password;
-  if (answers.webhook) process.env.DISCORD_WEBHOOK_URL = answers.webhook;
+  process.env.ATERNOS_USERNAME = username;
+  process.env.ATERNOS_PASSWORD = password;
+  if (webhook.trim()) process.env.DISCORD_WEBHOOK_URL = webhook;
 }
 
 async function initializeAternos() {
@@ -51,7 +39,7 @@ async function initializeAternos() {
   const password = process.env.ATERNOS_PASSWORD;
 
   if (!username || !password) {
-    console.log('\n⚠️  Necesitas configurar tus credenciales primero\n');
+    console.log('⚠️  Necesitas configurar tus credenciales primero\n');
     await setupCredentials();
     return initializeAternos();
   }
@@ -60,7 +48,7 @@ async function initializeAternos() {
   const authenticated = await client.authenticate(username, password);
 
   if (!authenticated) {
-    console.log('\n❌ Error de autenticación\n');
+    console.log('❌ Error de autenticación\n');
     return null;
   }
 
@@ -69,11 +57,11 @@ async function initializeAternos() {
 
 function startBot() {
   if (botProcess) {
-    console.log('\n⚠️  Bot ya está corriendo\n');
+    console.log('⚠️  Bot ya está corriendo\n');
     return;
   }
 
-  console.log('\n🤖 Iniciando bot...\n');
+  console.log('🤖 Iniciando bot...\n');
   botProcess = spawn('node', ['bot.js'], {
     stdio: 'inherit',
     cwd: process.cwd()
@@ -86,40 +74,40 @@ function startBot() {
 
 function stopBot() {
   if (!botProcess) {
-    console.log('\n⚠️  Bot no está corriendo\n');
+    console.log('⚠️  Bot no está corriendo\n');
     return;
   }
 
   botProcess.kill('SIGTERM');
   botProcess = null;
-  console.log('\n✅ Bot detenido\n');
+  console.log('✅ Bot detenido\n');
 }
 
 async function startAternos(client) {
   if (!client) {
-    console.log('\n❌ Aternos no disponible\n');
+    console.log('❌ Aternos no disponible\n');
     return;
   }
 
   const success = await client.startServer();
   if (success) {
-    console.log('\n✅ Aternos iniciando... (espera 30-60 seg)\n');
+    console.log('✅ Aternos iniciando... (espera 30-60 seg)\n');
   } else {
-    console.log('\n❌ Error al iniciar Aternos\n');
+    console.log('❌ Error al iniciar Aternos\n');
   }
 }
 
 async function stopAternos(client) {
   if (!client) {
-    console.log('\n❌ Aternos no disponible\n');
+    console.log('❌ Aternos no disponible\n');
     return;
   }
 
   const success = await client.stopServer();
   if (success) {
-    console.log('\n✅ Aternos detenido\n');
+    console.log('✅ Aternos detenido\n');
   } else {
-    console.log('\n❌ Error al detener Aternos\n');
+    console.log('❌ Error al detener Aternos\n');
   }
 }
 
@@ -129,32 +117,23 @@ async function showMenu() {
 ╔════════════════════════════════════════╗
 ║     🎮 MINECRAFT BOT - CONTROL        ║
 ╚════════════════════════════════════════╝
+
+1) 🚀 Iniciar Bot + Aternos
+2) 🤖 Solo Bot
+3) ⚡ Encender Aternos
+4) 🔌 Apagar Aternos
+5) ⏹️  Detener Bot
+6) 🔑 Reconfigurar Credenciales
+0) ❌ Salir
 `);
 
-  const { action } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'action',
-      message: 'Selecciona una acción:',
-      choices: [
-        { name: '🚀 Iniciar Bot + Aternos', value: '1' },
-        { name: '🤖 Solo Bot', value: '2' },
-        { name: '⚡ Encender Aternos', value: '3' },
-        { name: '🔌 Apagar Aternos', value: '4' },
-        { name: '⏹️  Detener Bot', value: '5' },
-        { name: '🔑 Reconfigurar Credenciales', value: '6' },
-        new inquirer.Separator(),
-        { name: '❌ Salir', value: '0' }
-      ],
-      pageSize: 10
-    }
-  ]);
+  const choice = prompt('Elige una opción (0-6): ').trim();
 
   const client = await initializeAternos();
 
-  switch (action) {
+  switch (choice) {
     case '1':
-      console.log('\n⏳ Encendiendo Aternos y bot...\n');
+      console.log('⏳ Encendiendo Aternos y bot...\n');
       await startAternos(client);
       setTimeout(() => startBot(), 2000);
       break;
@@ -174,16 +153,19 @@ async function showMenu() {
       await setupCredentials();
       break;
     case '0':
-      console.log('\n👋 Saliendo...\n');
+      console.log('👋 Saliendo...\n');
       process.exit(0);
+      break;
+    default:
+      console.log('❌ Opción inválida\n');
   }
 
-  setTimeout(showMenu, 3000);
+  setTimeout(showMenu, 2000);
 }
 
-console.log('\n🚀 Iniciando Minecraft Bot...\n');
+console.log('🚀 Iniciando Minecraft Bot...\n');
 
 showMenu().catch(err => {
   console.error('❌ Error:', err.message);
-  process.exit(1);
+  setTimeout(() => process.exit(1), 1000);
 });
