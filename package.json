@@ -6,7 +6,15 @@
   "scripts": {
     "start": "node bot.js",
     "dev": "node bot.js",
-    "launcher": "node launcher.js"
+    "launcher": "node launcher.js",
+    "build": "pkg launcher.js -o MCBotApp --compress Brotli",
+    "build:windows": "pkg launcher.js -t win-x64 -o MCBotApp.exe --compress Brotli",
+    "build:mac": "pkg launcher.js -t macos-x64 -o MCBotApp --compress Brotli",
+    "build:linux": "pkg launcher.js -t linux-x64 -o MCBotApp --compress Brotli"
+  },
+  "pkg": {
+    "scripts": ["bot.js", "launcher.js"],
+    "assets": [".env", "src/**/*", "package.json"]
   },
   "keywords": ["minecraft", "bot", "keepalive", "aternos", "discord"],
   "author": "",

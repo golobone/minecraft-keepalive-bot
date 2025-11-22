@@ -53,20 +53,20 @@ ATERNOS_PASSWORD=tu_contraseña
 
 ## Uso
 
-### En tu PC (RECOMENDADO)
+### En tu PC COMO APLICACIÓN (RECOMENDADO)
 
 1. Instala Node.js desde https://nodejs.org/
 2. Descarga el proyecto desde Replit (Download → ZIP)
-3. Extrae la carpeta y abre Terminal/PowerShell en ella
-4. Ejecuta:
+3. Extrae la carpeta
+4. Abre PowerShell en la carpeta y ejecuta:
    ```bash
    npm install
-   npm run launcher
    ```
-5. Verás un menú con opciones para:
-   - Iniciar/Detener el bot
-   - Encender/Apagar servidor Aternos automáticamente
-   - Ver estado de todo
+5. **Opción automática**: Click derecho en `installer-windows.bat` → "Ejecutar como administrador"
+   - ¡Listo! Aparecerá en tu menú Inicio
+6. **Opción manual**: Ejecuta `npm run launcher` desde PowerShell
+
+Ver detalles completos en `install-instructions.md`
 
 ### En Replit
 
@@ -101,4 +101,4 @@ minecraft: {
 - [ ] Soporte para múltiples servidores
 
 ## Última actualización
-21 de noviembre de 2025 - v2.0.0
+22 de noviembre de 2025 - v2.1.0 (Instalador como Aplicación agregado)
