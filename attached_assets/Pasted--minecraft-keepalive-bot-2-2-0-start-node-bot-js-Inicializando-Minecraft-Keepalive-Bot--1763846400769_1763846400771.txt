@@ -1,0 +1,147 @@
+> minecraft-keepalive-bot@2.2.0 start
+> node bot.js
+
+🚀 Inicializando Minecraft Keepalive Bot...
+
+🔍 URL del webhook: ✅ Detectado
+📡 Monitoreo con Discord habilitado ✅
+🤖 Creando bot de Minecraft...
+✅ Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Bot inicializado correctamente
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+📍 Comando teletransporte enviado
+👻 Comando espectador enviado
+🎮 Iniciando movimiento aleatorio...
+❌ Bot expulsado del servidor: {
+  type: 'compound',
+  value: {
+    extra: { type: 'list', value: [Object] },
+    text: { type: 'string', value: '' }
+  }
+}
+🔄 Reconectando en 10 segundos... (Intento 1/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+✅ Notificación enviada a Discord: 🔄 Reintentando conexión
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+🤖 Creando bot de Minecraft...
+✅ Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Bot inicializado correctamente
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+📍 Comando teletransporte enviado
+👻 Comando espectador enviado
+🎮 Iniciando movimiento aleatorio...
+❌ Bot expulsado del servidor: {
+  type: 'compound',
+  value: {
+    extra: { type: 'list', value: [Object] },
+    text: { type: 'string', value: '' }
+  }
+}
+🔄 Reconectando en 10 segundos... (Intento 1/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+✅ Notificación enviada a Discord: 🔄 Reintentando conexión
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+🤖 Creando bot de Minecraft...
+✅ Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Bot inicializado correctamente
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+📍 Comando teletransporte enviado
+👻 Comando espectador enviado
+🎮 Iniciando movimiento aleatorio...
+❌ Bot expulsado del servidor: {
+  type: 'compound',
+  value: {
+    extra: { type: 'list', value: [Object] },
+    text: { type: 'string', value: '' }
+  }
+}
+🔄 Reconectando en 10 segundos... (Intento 1/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+✅ Notificación enviada a Discord: 🔄 Reintentando conexión
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+🤖 Creando bot de Minecraft...
+✅ Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Bot inicializado correctamente
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+📍 Comando teletransporte enviado
+👻 Comando espectador enviado
+🎮 Iniciando movimiento aleatorio...
+❌ Bot expulsado del servidor: {
+  type: 'compound',
+  value: {
+    extra: { type: 'list', value: [Object] },
+    text: { type: 'string', value: '' }
+  }
+}
+🔄 Reconectando en 10 segundos... (Intento 1/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+✅ Notificación enviada a Discord: 🔄 Reintentando conexión
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+🤖 Creando bot de Minecraft...
+✅ Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Bot inicializado correctamente
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+📍 Comando teletransporte enviado
+👻 Comando espectador enviado
+🎮 Iniciando movimiento aleatorio...
+❌ Bot expulsado del servidor: {
+  type: 'compound',
+  value: {
+    extra: { type: 'list', value: [Object] },
+    text: { type: 'string', value: '' }
+  }
+}
+🔄 Reconectando en 10 segundos... (Intento 1/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+✅ Notificación enviada a Discord: 🔄 Reintentando conexión
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+npm error path /workspace
+npm error command failed
+npm error signal SIGTERM
+npm error command sh -c node bot.js
+npm error A complete log of this run can be found in: /tmp/npm_cache/_logs/2025-11-22T21_18_07_460Z-debug-0.log
+TCP health check failed on port 8000.
+
+> minecraft-keepalive-bot@2.2.0 start
+> node bot.js
+
+🚀 Inicializando Minecraft Keepalive Bot...
+
+🔍 URL del webhook: ✅ Detectado
+📡 Monitoreo con Discord habilitado ✅
+🤖 Creando bot de Minecraft...
+✅ Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Bot inicializado correctamente
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 63, 0.5)
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+📍 Comando teletransporte enviado
+👻 Comando espectador enviado
+🎮 Iniciando movimiento aleatorio...
