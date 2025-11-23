@@ -54,13 +54,15 @@ class MinecraftBot {
       // Convertir reason a string de forma segura
       const reasonStr = typeof reason === 'string' ? reason : JSON.stringify(reason);
       
-      // Si es throttled, esperar más tiempo
-      if (reasonStr && reasonStr.includes('throttled')) {
-        console.log('⏳ Servidor limitando conexiones - esperando 2 minutos...');
+      // Si es throttled o login desde otra ubicación, esperar mucho tiempo
+      if (reasonStr && (reasonStr.includes('throttled') || reasonStr.includes('logged in from'))) {
+        const waitTime = reasonStr.includes('throttled') ? 120000 : 300000; // 2 min o 5 min
+        const waitLabel = reasonStr.includes('throttled') ? '2 minutos' : '5 minutos';
+        console.log(`⏳ Esperando ${waitLabel} antes de reconectar...`);
         setTimeout(() => {
           this.reconnectAttempts = 0;
-          this.reconnect();
-        }, 120000); // 2 minutos
+          this.create();
+        }, waitTime);
       } else {
         this.reconnect();
       }
