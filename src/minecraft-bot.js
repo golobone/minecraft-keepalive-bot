@@ -37,10 +37,10 @@ class MinecraftBot {
         this.hasInitialized = true;
         console.log('✅ Bot inicializado correctamente');
         
-        // Iniciar movimiento aleatorio sin comandos
-        if (!this.movementInterval) {
-          this.startRandomMovement();
-        }
+        // Movimiento desactivado temporalmente para probar
+        // if (!this.movementInterval) {
+        //   this.startRandomMovement();
+        // }
       }
     });
 
