@@ -5,33 +5,57 @@ const MinecraftBot = require('./src/minecraft-bot');
 const DiscordNotifier = require('./src/discord-notifier');
 const config = require('./src/config');
 
-// Health check server - responde a Koyeb en puerto 9999
+// Variables globales
+let bot = null;
+let discordNotifier = null;
+let serverMonitor = null;
+
+// Health check server - SIEMPRE debe estar funcionando
 const healthServer = http.createServer((req, res) => {
-  res.writeHead(200);
-  res.end('OK');
+  try {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK');
+  } catch (err) {
+    console.log('⚠️  Error en health check:', err.message);
+  }
+});
+
+healthServer.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log('⚠️  Puerto 9999 ya está en uso');
+  } else {
+    console.log('⚠️  Error en health check server:', err.message);
+  }
 });
 
 healthServer.listen(9999, '0.0.0.0', () => {
   console.log('🏥 Health check en puerto 9999');
+}).on('error', (err) => {
+  console.error('❌ No se pudo iniciar health check:', err.message);
 });
 
 async function initialize() {
-  console.log('🚀 Inicializando Minecraft Keepalive Bot...');
-  console.log('');
+  try {
+    console.log('🚀 Inicializando Minecraft Keepalive Bot...');
+    console.log('');
 
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL || config.discord.webhookUrl;
-  console.log('🔍 URL del webhook:', webhookUrl ? '✅ Detectado' : '❌ No encontrado');
-  
-  discordNotifier = new DiscordNotifier(webhookUrl);
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL || config.discord.webhookUrl;
+    console.log('🔍 URL del webhook:', webhookUrl ? '✅ Detectado' : '❌ No encontrado');
+    
+    discordNotifier = new DiscordNotifier(webhookUrl);
 
-  if (discordNotifier.isEnabled) {
-    console.log('📡 Monitoreo con Discord habilitado ✅');
-  } else {
-    console.log('⚠️  Discord Webhook no configurado - solo modo local');
+    if (discordNotifier.isEnabled) {
+      console.log('📡 Monitoreo con Discord habilitado ✅');
+    } else {
+      console.log('⚠️  Discord Webhook no configurado - solo modo local');
+    }
+
+    bot = new MinecraftBot(config.minecraft, discordNotifier);
+    bot.create();
+  } catch (err) {
+    console.error('❌ Error durante la inicialización:', err.message);
+    console.error(err.stack);
   }
-
-  bot = new MinecraftBot(config.minecraft, discordNotifier);
-  bot.create();
 }
 
 process.on('uncaughtException', (err) => {
@@ -66,7 +90,4 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-initialize().catch(err => {
-  console.error('❌ Error durante la inicialización:', err.message);
-  process.exit(1);
-});
+initialize();
