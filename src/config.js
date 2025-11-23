@@ -4,7 +4,7 @@ module.exports = {
     host: 'Aleatrio.aternos.me',
     port: 16024,
     username: 'EternalAFK',
-    version: false,
+    version: '1.20.1',
     auth: 'offline'
   },
   
