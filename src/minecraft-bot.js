@@ -54,15 +54,22 @@ class MinecraftBot {
       // Convertir reason a string de forma segura
       const reasonStr = typeof reason === 'string' ? reason : JSON.stringify(reason);
       
-      // Si es throttled o login desde otra ubicación, esperar mucho tiempo
-      if (reasonStr && (reasonStr.includes('throttled') || reasonStr.includes('logged in from'))) {
-        const waitTime = reasonStr.includes('throttled') ? 120000 : 300000; // 2 min o 5 min
-        const waitLabel = reasonStr.includes('throttled') ? '2 minutos' : '5 minutos';
-        console.log(`⏳ Esperando ${waitLabel} antes de reconectar...`);
+      // Si login desde otra ubicación, DETENER permanentemente
+      if (reasonStr && reasonStr.includes('logged in from')) {
+        console.log('🛑 Otra conexión detectada. Bot DETENIDO.');
+        if (this.discordNotifier) {
+          this.discordNotifier.notifyError('Otra conexión detectada', 'Bot detenido permanentemente');
+        }
+        return; // No reconectar
+      }
+      
+      // Si es throttled, esperar 2 minutos
+      if (reasonStr && reasonStr.includes('throttled')) {
+        console.log('⏳ Servidor limitando conexiones - esperando 2 minutos...');
         setTimeout(() => {
           this.reconnectAttempts = 0;
           this.create();
-        }, waitTime);
+        }, 120000); // 2 minutos
       } else {
         this.reconnect();
       }
