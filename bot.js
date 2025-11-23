@@ -1,8 +1,19 @@
 require('dotenv').config();
 
+const http = require('http');
 const MinecraftBot = require('./src/minecraft-bot');
 const DiscordNotifier = require('./src/discord-notifier');
 const config = require('./src/config');
+
+// Health check server - responde a Koyeb en puerto 9999
+const healthServer = http.createServer((req, res) => {
+  res.writeHead(200);
+  res.end('OK');
+});
+
+healthServer.listen(9999, '0.0.0.0', () => {
+  console.log('🏥 Health check en puerto 9999');
+});
 
 async function initialize() {
   console.log('🚀 Inicializando Minecraft Keepalive Bot...');
