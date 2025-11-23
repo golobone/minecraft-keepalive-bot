@@ -72,8 +72,11 @@ class MinecraftBot {
         this.discordNotifier.notifyBotDisconnected(`Expulsado: ${reason}`);
       }
       
+      // Convertir reason a string de forma segura
+      const reasonStr = typeof reason === 'string' ? reason : JSON.stringify(reason);
+      
       // Si es throttled, esperar más tiempo
-      if (reason && reason.includes('throttled')) {
+      if (reasonStr && reasonStr.includes('throttled')) {
         console.log('⏳ Servidor limitando conexiones - esperando 2 minutos...');
         setTimeout(() => {
           this.reconnectAttempts = 0;
