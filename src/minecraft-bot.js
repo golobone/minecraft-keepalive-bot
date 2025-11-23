@@ -186,7 +186,8 @@ class MinecraftBot {
     
     console.log(`🔄 Reconectando en ${seconds} segundos... (Intento ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
     
-    if (this.discordNotifier) {
+    // Solo notificar cada 3 intentos para no bombardear Discord
+    if (this.discordNotifier && this.reconnectAttempts % 3 === 0) {
       this.discordNotifier.notifyReconnectionAttempt(this.reconnectAttempts, this.maxReconnectAttempts, delay);
     }
     
