@@ -54,13 +54,16 @@ class MinecraftBot {
       // Convertir reason a string de forma segura
       const reasonStr = typeof reason === 'string' ? reason : JSON.stringify(reason);
       
-      // Si login desde otra ubicación, DETENER permanentemente
+      // Si login desde otra ubicación, DETENER COMPLETAMENTE EL PROCESO
       if (reasonStr && reasonStr.includes('logged in from')) {
-        console.log('🛑 Otra conexión detectada. Bot DETENIDO.');
+        console.log('🛑 Otra conexión detectada. SALIENDO DEL PROCESO.');
         if (this.discordNotifier) {
           this.discordNotifier.notifyError('Otra conexión detectada', 'Bot detenido permanentemente');
         }
-        return; // No reconectar
+        setTimeout(() => {
+          process.exit(0); // Salir del proceso completamente
+        }, 2000);
+        return;
       }
       
       // Si es throttled, esperar 2 minutos
