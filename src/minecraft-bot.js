@@ -144,22 +144,39 @@ class MinecraftBot {
       return;
     }
     
-    console.log('🎮 Iniciando movimiento aleatorio...');
+    console.log('🎮 Iniciando movimiento anti-AFK...');
     
     this.movementInterval = setInterval(() => {
       // Verificar que bot existe y está conectado
       if (!this.bot || !this.bot.entity || !this.bot.player) return;
 
       try {
-        // Solo rotación, sin movimiento - mucho más seguro
+        // Rotación frecuente
         const yaw = Math.random() * Math.PI * 2;
         const pitch = (Math.random() - 0.5) * Math.PI * 0.3;
         this.bot.look(yaw, pitch);
+        
+        // Saltar cada 3 movimientos para mayor actividad
+        if (Math.random() < 0.33) {
+          this.bot.setControlState('jump', true);
+          setTimeout(() => {
+            if (this.bot) this.bot.setControlState('jump', false);
+          }, 100);
+        }
+        
+        // Enviar acción de chat silenciosa cada 8 movimientos (cada ~20 seg)
+        if (Math.random() < 0.125) {
+          try {
+            this.bot.chat('.');
+          } catch (err) {
+            // Ignorar
+          }
+        }
       } catch (err) {
         // Ignorar silenciosamente
       }
 
-    }, 5000 + Math.random() * 5000);
+    }, 2500 + Math.random() * 2500); // Cada 2.5-5 segundos
   }
 
   stopRandomMovement() {
