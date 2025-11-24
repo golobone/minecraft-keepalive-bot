@@ -10,6 +10,7 @@ class MinecraftBot {
     this.maxReconnectAttempts = 10;
     this.baseReconnectDelay = 10000;
     this.hasInitialized = false;
+    this.isStoppedPermanently = false;
   }
 
   create() {
@@ -54,15 +55,17 @@ class MinecraftBot {
       // Convertir reason a string de forma segura
       const reasonStr = typeof reason === 'string' ? reason : JSON.stringify(reason);
       
-      // Si login desde otra ubicación, DETENER COMPLETAMENTE EL PROCESO
+      // Si login desde otra ubicación, MARCAR COMO DETENIDO PERMANENTEMENTE
       if (reasonStr && reasonStr.includes('logged in from')) {
-        console.log('🛑 Otra conexión detectada. SALIENDO DEL PROCESO.');
-        if (this.discordNotifier) {
-          this.discordNotifier.notifyError('Otra conexión detectada', 'Bot detenido permanentemente');
+        console.log('🛑 Otra conexión detectada. Bot DETENIDO (sin reconexión).');
+        this.isStoppedPermanently = true;
+        this.stopRandomMovement();
+        if (this.bot) {
+          this.bot.end();
         }
-        setTimeout(() => {
-          process.exit(0); // Salir del proceso completamente
-        }, 2000);
+        if (this.discordNotifier) {
+          this.discordNotifier.notifyError('Otra conexión detectada', 'Bot detenido permanentemente. Health check: activo');
+        }
         return;
       }
       
@@ -170,6 +173,12 @@ class MinecraftBot {
   }
 
   reconnect() {
+    // Si está detenido permanentemente, no reconectar
+    if (this.isStoppedPermanently) {
+      console.log('⏸️ Bot detenido permanentemente - no reconectando');
+      return;
+    }
+    
     this.reconnectAttempts++;
     
     if (this.reconnectAttempts > this.maxReconnectAttempts) {
