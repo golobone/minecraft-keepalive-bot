@@ -61,17 +61,21 @@ class MinecraftBot {
       // Convertir reason a string de forma segura
       const reasonStr = typeof reason === 'string' ? reason : JSON.stringify(reason);
       
-      // Si login desde otra ubicación, MARCAR COMO DETENIDO PERMANENTEMENTE
+      // Si login desde otra ubicación, ESPERAR 12 HORAS antes de reintentar
       if (reasonStr && reasonStr.includes('logged in from')) {
-        console.log('🛑 Otra conexión detectada. Bot DETENIDO (sin reconexión).');
-        this.isStoppedPermanently = true;
+        console.log('🛑 Otra conexión detectada. Esperando 12 horas antes de reintentar...');
         this.stopRandomMovement();
         if (this.bot) {
           this.bot.end();
         }
         if (this.discordNotifier) {
-          this.discordNotifier.notifyError('Otra conexión detectada', 'Bot detenido permanentemente. Health check: activo');
+          this.discordNotifier.notifyError('Otra conexión detectada', 'Esperando 12 horas. Health check: activo');
         }
+        // Esperar 12 horas
+        setTimeout(() => {
+          this.reconnectAttempts = 0;
+          this.create();
+        }, 43200000); // 12 horas
         return;
       }
       
