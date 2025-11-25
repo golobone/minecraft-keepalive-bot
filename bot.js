@@ -10,29 +10,41 @@ let bot = null;
 let discordNotifier = null;
 let serverMonitor = null;
 
-// Health check server - SIEMPRE debe estar funcionando
+// Ultra-simple health check - nunca falla
 const healthServer = http.createServer((req, res) => {
-  try {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('OK');
-  } catch (err) {
-    console.log('⚠️  Error en health check:', err.message);
-  }
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('OK');
 });
+
+healthServer.on('clientError', (err, socket) => {
+  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+});
+
+let healthServerStarted = false;
+
+function startHealthCheck() {
+  if (healthServerStarted) return;
+  
+  try {
+    healthServer.listen(9999, '0.0.0.0', () => {
+      healthServerStarted = true;
+      console.log('🏥 Health check en puerto 9999');
+    });
+  } catch (err) {
+    console.error('❌ Error health check:', err.message);
+    setTimeout(startHealthCheck, 5000);
+  }
+}
 
 healthServer.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.log('⚠️  Puerto 9999 ya está en uso');
-  } else {
-    console.log('⚠️  Error en health check server:', err.message);
+  console.log('⚠️  Health check error:', err.code);
+  healthServerStarted = false;
+  if (err.code !== 'EADDRINUSE') {
+    setTimeout(startHealthCheck, 5000);
   }
 });
 
-healthServer.listen(9999, '0.0.0.0', () => {
-  console.log('🏥 Health check en puerto 9999');
-}).on('error', (err) => {
-  console.error('❌ No se pudo iniciar health check:', err.message);
-});
+startHealthCheck();
 
 async function initialize() {
   try {
