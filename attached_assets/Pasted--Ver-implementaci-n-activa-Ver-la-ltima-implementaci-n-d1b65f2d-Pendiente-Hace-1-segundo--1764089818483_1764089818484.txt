@@ -1,0 +1,173 @@
+
+
+Ver implementación activa
+Ver la última implementación
+d1b65f2d
+
+Pendiente
+Hace 1 segundo
+Se activa porque el servicio se ha actualizado o vuelto a implementar
+Se produjo un error al implementar su aplicación
+¿Por qué pasó esto?
+Diferentes razones pueden provocar un fallo en la implementación. Las más comunes son:
+
+El comando para iniciar su aplicación no está definido
+Su solicitud no pasó los controles de salud iniciales
+El tipo de instancia seleccionado no tiene suficientes recursos para ejecutar correctamente su aplicación
+¿Como solucionar el problema?
+Primero, asegúrese de que su aplicación funcione correctamente en su equipo. Los registros de implementación también proporcionan información útil para identificar y resolver la causa raíz. Consulte nuestra documentación de solución de problemas para ver y resolver errores comunes.
+
+Consulte los registros de implementación para obtener más detalles.
+
+Descripción general
+Servicio web
+URL pública
+cansado-orelie-golobonbe-b9fb9359.koyeb.app/
+(reenviado al puerto 9999)
+
+Dirección privada
+bot de mantenimiento de Minecraft.bot.internal:9999
+
+Proxy TCP
+01.proxy.koyeb.app:19986
+(reenviado al puerto 9999)
+
+Repositorio
+golobone/minecraft-keepalive-bot
+Rama
+principal
+Tipo de constructor
+Paquete de construcción
+Privilegiado
+FALSO
+Instancia
+Nano
+Configurar
+Escalada
+0de 1correr
+Configurar
+Regiones
+
+Fráncfort
+Configurar
+Ambiente
+1 variable
+Configurar
+Volúmenes
+0 volúmenes adjuntos
+Configurar
+Ver más
+Construir
+Terminado
+Despliegue
+Pendiente
+Registros
+Todas las regiones
+Todas las instancias
+
+salida estándar
+
+error estándar
+
+evento
+
+    en afterWriteDispatched (nodo:internal/stream_base_commons:159:15)
+    en writeGeneric (nodo:internal/stream_base_commons:150:3)
+    en Socket._writeGeneric (nodo:net:971:11)
+    en Socket._write (nodo:net:983:8)
+    en writeOrBuffer (nodo:internal/streams/writable:572:12)
+    en _write (nodo:interno/flujos/escribible:501:10)
+    en Writable.write (nodo:internal/streams/writable:510:10)
+    en Framer.ondata (/espacio de trabajo/node_modules/readable-stream/lib/internal/streams/readable.js:707:22)
+    en Framer.emit (nodo:eventos:518:28)
+    en addChunk (/espacio de trabajo/node_modules/readable-stream/lib/internal/streams/readable.js:323:12) {
+  error: -104,
+  código: 'ECONNRESET',
+  llamada al sistema: 'escribir'
+}
+⚠️ ❌ Error ECONNRESET (conexión reiniciada): escribe ECONNRESET
+🔄 Reconectando en 10 segundos... (Intento 1/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+🔄 Reconectando en 15 segundos... (Intento 2/10)
+✅ Notificación enviada a Discord: ❌ ❌ Error ECONNRESET (conexión reiniciada)
+La instancia está en buen estado. Todas las comprobaciones de estado son correctas.
+🤖 Creando bot de Minecraft...
+✅ ¡Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (1000.5, 53, 1000.5)
+✅ Bot inicializado correctamente
+🎮 Iniciando movimiento ligero (AxAFKZone activo en servidor)...
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+🤖 Creando bot de Minecraft...
+✅ ¡Bot conectado al servidor!
+🌍 Bot apareció en el mundo
+📍 Posición: (1000.5, 53, 1000.5)
+✅ Bot inicializado correctamente
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+❌ Bot expulsado del servidor: {"color":"green","extra":[{"text":"\n"},{"color":"gray","text":"Por favor, vuelva a conectarse para unirse."}],"text":"Este servidor está en línea."}
+🔄 Reconectando en 10 segundos... (Intento 1/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+🔄 Reconectando en 15 segundos... (Intento 2/10)
+❌ Bot expulsado del servidor: {"color":"green","extra":[{"text":"\n"},{"color":"gray","text":"Por favor, vuelva a conectarse para unirse."}],"text":"Este servidor está en línea."}
+🔄 Reconectando en 23 segundos... (Intento 3/10)
+🔌 Conexión terminada
+📤 Razón: socketClosed
+🔄 Reconectando en 34 segundos... (Intento 4/10)
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+✅ Notificación enviada a Discord: 🔄 Reconectando...
+🤖 Creando bot de Minecraft...
+✅ ¡Bot conectado al servidor!
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 255, 0.5)
+✅ Bot inicializado correctamente
+🎮 Iniciando movimiento ligero (AxAFKZone activo en servidor)...
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 255, 0.5)
+🤖 Creando bot de Minecraft...
+❌ Bot expulsado del servidor: {"extra":[{"text":"Has iniciado sesión desde otra ubicación"}],"text":""}
+🛑 Otra conexión detectada. Bot DETENIDO (sin reconexión).
+Error: leer ECONNRESET
+    en TCP.onStreamRead (nodo:internal/stream_base_commons:216:20) {
+  error: -104,
+  código: 'ECONNRESET',
+  llamada al sistema: 'leer'
+}
+⚠️ ❌ Error ECONNRESET (conexión reiniciada): lee ECONNRESET
+⏸️ Bot detenido permanentemente - no reconectando
+🔌 Conexión terminada
+📤 Razón: socketClosed
+⏸️ Bot detenido permanentemente - no reconectando
+🔌 Conexión terminada
+📤 Razón: socketClosed
+⏸️ Bot detenido permanentemente - no reconectando
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+✅ Notificación enviada a Discord: ❌ Otra conexión detectada
+✅ Notificación enviada a Discord: ❌ ❌ Error ECONNRESET (conexión reiniciada)
+🤖 Creando bot de Minecraft...
+✅ ¡Bot conectado al servidor!
+✅ Notificación enviada a Discord: 🤖 Bot conectado
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 255, 0.5)
+✅ Bot inicializado correctamente
+🎮 Iniciando movimiento ligero (AxAFKZone activo en servidor)...
+🌍 Bot apareció en el mundo
+📍 Posición: (0.5, 255, 0.5)
+🤖 Creando bot de Minecraft...
+❌ Bot expulsado del servidor: {"extra":[{"text":"Has iniciado sesión desde otra ubicación"}],"text":""}
+🛑 Otra conexión detectada. Bot DETENIDO (sin reconexión).
+🔌 Conexión terminada
+📤 Razón: socketClosed
+⏸️ Bot detenido permanentemente - no reconectando
+🔌 Conexión terminada
+📤 Razón: socketClosed
+⏸️ Bot detenido permanentemente - no reconectando
+✅ Notificación enviada a Discord: ❌ Otra conexión detectada
+✅ Notificación enviada a Discord: 🔌 Bot desconectado
+Instancia creada. Preparándose para iniciar...
+Error al descargar la imagen. La imagen no existe. Por favor, revise la configuración de su servicio.
+La instancia se está deteniendo.
+Instancia detenida.

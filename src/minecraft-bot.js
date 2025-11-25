@@ -14,6 +14,12 @@ class MinecraftBot {
   }
 
   create() {
+    // Si está detenido permanentemente, no crear un nuevo bot
+    if (this.isStoppedPermanently) {
+      console.log('⏸️ Bot ya está detenido permanentemente - no creando nuevo');
+      return;
+    }
+    
     console.log('🤖 Creando bot de Minecraft...');
     
     this.bot = mineflayer.createBot(this.config);
@@ -87,7 +93,11 @@ class MinecraftBot {
         console.log('📤 Razón:', reason);
       }
       this.stopRandomMovement();
-      this.reconnect();
+      
+      // No reconectar si está detenido permanentemente
+      if (!this.isStoppedPermanently) {
+        this.reconnect();
+      }
     });
 
     this.bot.on('error', (err) => {
