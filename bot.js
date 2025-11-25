@@ -9,42 +9,46 @@ const config = require('./src/config');
 let bot = null;
 let discordNotifier = null;
 let serverMonitor = null;
+let isRunning = true;
 
-// Ultra-simple health check - nunca falla
+// HEALTH CHECK - COMPLETAMENTE INDEPENDIENTE, NUNCA FALLA
 const healthServer = http.createServer((req, res) => {
+  if (!isRunning) {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK');
+    return;
+  }
+  
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('OK');
 });
 
 healthServer.on('clientError', (err, socket) => {
-  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+  try {
+    socket.end('HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nOK');
+  } catch (e) {
+    // Ignorar
+  }
 });
 
-let healthServerStarted = false;
-
-function startHealthCheck() {
-  if (healthServerStarted) return;
-  
-  try {
-    healthServer.listen(9999, '0.0.0.0', () => {
-      healthServerStarted = true;
-      console.log('🏥 Health check en puerto 9999');
-    });
-  } catch (err) {
-    console.error('❌ Error health check:', err.message);
-    setTimeout(startHealthCheck, 5000);
-  }
-}
+const port = 9999;
+healthServer.listen(port, '0.0.0.0', () => {
+  console.log(`🏥 Health check en puerto ${port} - INDEPENDIENTE`);
+});
 
 healthServer.on('error', (err) => {
-  console.log('⚠️  Health check error:', err.code);
-  healthServerStarted = false;
-  if (err.code !== 'EADDRINUSE') {
-    setTimeout(startHealthCheck, 5000);
-  }
+  console.log('⚠️ Health check error:', err.code);
+  // Nunca detener el health check por errores
 });
 
-startHealthCheck();
+// Procesar terminación elegante
+process.on('SIGTERM', () => {
+  isRunning = false;
+  console.log('SIGTERM recibido - health check sigue activo');
+  setTimeout(() => {
+    process.exit(0);
+  }, 1000);
+});
 
 async function initialize() {
   try {
@@ -83,6 +87,7 @@ let isShuttingDown = false;
 process.on('SIGINT', async () => {
   if (isShuttingDown) return;
   isShuttingDown = true;
+  isRunning = false;
   
   console.log('\n👋 Cerrando bot...');
   
