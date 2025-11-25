@@ -1,6 +1,7 @@
 modules = ["nodejs-20", "python-3.11"]
 [agent]
 expertMode = true
+integrations = ["github:1.0.0"]
 
 [workflows]
 runButton = "Project"
@@ -31,6 +32,7 @@ run = ["npm", "start"]
 
 [nix]
 packages = ["zip"]
+channel = "stable-25_05"
 
 [[ports]]
 localPort = 8000
