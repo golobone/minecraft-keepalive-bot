@@ -1,10 +1,10 @@
 module.exports = {
   // Minecraft Bot Config
   minecraft: {
-    host: 'Aleatrio.aternos.me',
-    port: 16024,
+    host: 'mundus.play.hosting',
+    port: 46099,
     username: 'EternalAFK',
-    version: '1.20.1',
+    version: '1.16.5',
     auth: 'offline'
   },
   
